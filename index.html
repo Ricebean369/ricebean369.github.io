@@ -535,7 +535,7 @@
     <!-- Audio Portal - This shows first and starts audio -->
     <div class="audio-portal" id="audioPortal">
         <div class="portal-title">RICEBEAN369</div>
-        <div class="portal-subtitle">CYBERPUNK MEGALOVANIA REMIX</div>
+        <div class="portal-subtitle">32-BIT CYBERPUNK EXPERIENCE</div>
         <button class="enter-button" onclick="enterWebsite()">ENTER MATRIX</button>
         <div class="portal-instruction">Click to unlock audio and enter the experience</div>
     </div>
@@ -557,7 +557,7 @@
 
         <!-- Music Controls -->
         <div class="music-controls">
-            <button class="music-btn" onclick="toggleMusic()" id="musicToggle">🔊 MEGALOVANIA ON</button>
+            <button class="music-btn" onclick="toggleMusic()" id="musicToggle">🔊 MUSIC ON</button>
             <div class="visualizer" id="audioVisualizer">
                 <div class="bar"></div>
                 <div class="bar"></div>
@@ -570,7 +570,7 @@
                 <div class="bar"></div>
                 <div class="bar"></div>
             </div>
-            <div class="audio-credit">CYBERPUNK MEGALOVANIA REMIX</div>
+            <div class="audio-credit">32-BIT CYBERPUNK MEGALOVANIA</div>
         </div>
 
         <!-- Game Portal -->
@@ -651,66 +651,17 @@
     </div>
 
     <script>
-        // ==================== CYBERPUNK MEGALOVANIA AUDIO SYSTEM ====================
-        class CyberpunkMegalovania {
+        // ==================== 32-BIT CYBERPUNK AUDIO SYSTEM ====================
+        class CyberpunkAudioSystem {
             constructor() {
                 this.audioContext = null;
+                this.mainMusic = null;
+                this.gameMusic = null;
+                this.currentMusic = null;
                 this.isPlaying = false;
                 this.masterGain = null;
                 this.analyser = null;
-                this.bpm = 140; // Slightly faster for cyberpunk feel
-                this.current16thNote = 0;
-                this.nextNoteTime = 0.0;
-                this.timerID = null;
-                this.notes = [];
                 
-                // Megalovania melody with cyberpunk enhancements
-                this.melody = [
-                    // Main riff - D5 D5 D5 D6 D5 D5 D5 A4
-                    { note: 'D5', duration: 0.25, type: 'square', time: 0 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 0.25 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 0.5 },
-                    { note: 'D6', duration: 0.25, type: 'square', time: 0.75 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 1 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 1.25 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 1.5 },
-                    { note: 'A4', duration: 0.25, type: 'square', time: 1.75 },
-                    
-                    // Second phrase
-                    { note: 'D5', duration: 0.25, type: 'square', time: 2 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 2.25 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 2.5 },
-                    { note: 'D6', duration: 0.25, type: 'square', time: 2.75 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 3 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 3.25 },
-                    { note: 'D5', duration: 0.25, type: 'square', time: 3.5 },
-                    { note: 'A4', duration: 0.25, type: 'square', time: 3.75 },
-                ];
-
-                // Cyberpunk bass line - deeper and more aggressive
-                this.bassLine = [
-                    { note: 'D2', duration: 0.5, type: 'sawtooth', time: 0 },
-                    { note: 'D2', duration: 0.5, type: 'sawtooth', time: 0.5 },
-                    { note: 'D2', duration: 0.5, type: 'sawtooth', time: 1 },
-                    { note: 'A1', duration: 0.5, type: 'sawtooth', time: 1.5 },
-                    { note: 'D2', duration: 0.5, type: 'sawtooth', time: 2 },
-                    { note: 'D2', duration: 0.5, type: 'sawtooth', time: 2.5 },
-                    { note: 'D2', duration: 0.5, type: 'sawtooth', time: 3 },
-                    { note: 'A1', duration: 0.5, type: 'sawtooth', time: 3.5 },
-                ];
-
-                // Modern drum patterns
-                this.drums = [
-                    { type: 'kick', time: 0 },
-                    { type: 'snare', time: 0.5 },
-                    { type: 'kick', time: 1 },
-                    { type: 'snare', time: 1.5 },
-                    { type: 'kick', time: 2 },
-                    { type: 'snare', time: 2.5 },
-                    { type: 'kick', time: 3 },
-                    { type: 'snare', time: 3.5 },
-                ];
-
                 this.init();
             }
 
@@ -718,212 +669,177 @@
                 try {
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     this.masterGain = this.audioContext.createGain();
-                    this.masterGain.gain.value = 0.4;
+                    this.masterGain.gain.value = 0.5;
                     this.masterGain.connect(this.audioContext.destination);
 
                     this.analyser = this.audioContext.createAnalyser();
                     this.analyser.fftSize = 256;
                     this.masterGain.connect(this.analyser);
 
-                    console.log('Cyberpunk Megalovania: SYSTEM ONLINE');
+                    // Create both music tracks
+                    this.createMainMusic();
+                    this.createGameMusic();
+                    
+                    console.log('32-Bit Cyberpunk Audio: SYSTEM ONLINE');
                 } catch (e) {
                     console.log('Web Audio API not supported:', e);
                 }
             }
 
+            createMainMusic() {
+                // Enhanced 32-bit Megalovania with modern production
+                this.mainMusic = {
+                    bpm: 135,
+                    sequence: [],
+                    instruments: []
+                };
+
+                // Main melody - cleaner 32-bit sound
+                const melodyNotes = [
+                    { note: 'D5', duration: 0.25, time: 0, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 0.25, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 0.5, type: 'square' },
+                    { note: 'D6', duration: 0.25, time: 0.75, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 1, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 1.25, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 1.5, type: 'square' },
+                    { note: 'A4', duration: 0.25, time: 1.75, type: 'square' },
+                ];
+
+                // Modern bass with sub-bass
+                const bassNotes = [
+                    { note: 'D2', duration: 0.5, time: 0, type: 'sawtooth' },
+                    { note: 'D2', duration: 0.5, time: 0.5, type: 'sawtooth' },
+                    { note: 'D2', duration: 0.5, time: 1, type: 'sawtooth' },
+                    { note: 'A1', duration: 0.5, time: 1.5, type: 'sawtooth' },
+                ];
+
+                // Add pads and atmosphere for 32-bit depth
+                const padNotes = [
+                    { note: 'D3', duration: 2, time: 0, type: 'sine' },
+                    { note: 'A2', duration: 2, time: 2, type: 'sine' },
+                ];
+
+                this.mainMusic.sequence = [...melodyNotes, ...bassNotes, ...padNotes];
+            }
+
+            createGameMusic() {
+                // Upbeat cyberpunk game music
+                this.gameMusic = {
+                    bpm: 145,
+                    sequence: [],
+                    instruments: []
+                };
+
+                // Game melody - more energetic
+                const gameMelody = [
+                    { note: 'G4', duration: 0.125, time: 0, type: 'square' },
+                    { note: 'A4', duration: 0.125, time: 0.125, type: 'square' },
+                    { note: 'B4', duration: 0.125, time: 0.25, type: 'square' },
+                    { note: 'C5', duration: 0.125, time: 0.375, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 0.5, type: 'square' },
+                    { note: 'D5', duration: 0.25, time: 0.75, type: 'square' },
+                    { note: 'C5', duration: 0.125, time: 1, type: 'square' },
+                    { note: 'B4', duration: 0.125, time: 1.125, type: 'square' },
+                    { note: 'A4', duration: 0.125, time: 1.25, type: 'square' },
+                    { note: 'G4', duration: 0.125, time: 1.375, type: 'square' },
+                ];
+
+                // Driving bass for game
+                const gameBass = [
+                    { note: 'G1', duration: 0.25, time: 0, type: 'sawtooth' },
+                    { note: 'G1', duration: 0.25, time: 0.25, type: 'sawtooth' },
+                    { note: 'G1', duration: 0.25, time: 0.5, type: 'sawtooth' },
+                    { note: 'G1', duration: 0.25, time: 0.75, type: 'sawtooth' },
+                    { note: 'F1', duration: 0.25, time: 1, type: 'sawtooth' },
+                    { note: 'F1', duration: 0.25, time: 1.25, type: 'sawtooth' },
+                ];
+
+                this.gameMusic.sequence = [...gameMelody, ...gameBass];
+            }
+
             noteToFrequency(note) {
                 const notes = {
-                    // Bass notes
-                    'A1': 55.00, 'D2': 73.42,
-                    // Melody notes
-                    'A4': 440.00, 'D5': 587.33, 'D6': 1174.66
+                    // Bass range
+                    'G1': 49.00, 'A1': 55.00, 'D2': 73.42, 'A2': 110.00, 'D3': 146.83,
+                    // Melody range
+                    'G4': 392.00, 'A4': 440.00, 'B4': 493.88, 'C5': 523.25, 
+                    'D5': 587.33, 'D6': 1174.66
                 };
                 return notes[note] || 440;
             }
 
-            createOscillator(frequency, type, duration, startTime) {
+            playMusic(type = 'main') {
+                if (!this.audioContext) return;
+                
+                // Stop current music
+                this.stopMusic();
+                
+                // Choose which music to play
+                const music = type === 'game' ? this.gameMusic : this.mainMusic;
+                this.currentMusic = music;
+                
+                const now = this.audioContext.currentTime;
+                const secondsPerBeat = 60.0 / music.bpm;
+                
+                // Play all notes in the sequence
+                music.sequence.forEach(noteData => {
+                    this.playNote(noteData, now, secondsPerBeat);
+                });
+                
+                this.isPlaying = true;
+                
+                // Schedule next measure
+                setTimeout(() => {
+                    if (this.isPlaying && this.currentMusic === music) {
+                        this.playMusic(type);
+                    }
+                }, secondsPerBeat * 8 * 1000); // 8 measures
+            }
+
+            playNote(noteData, startTime, secondsPerBeat) {
+                const frequency = this.noteToFrequency(noteData.note);
+                const noteStart = startTime + (noteData.time * secondsPerBeat);
+                const duration = noteData.duration * secondsPerBeat;
+
                 const oscillator = this.audioContext.createOscillator();
-                oscillator.type = type;
+                oscillator.type = noteData.type;
                 oscillator.frequency.value = frequency;
                 
-                // Add filter for cyberpunk sound
+                // Enhanced 32-bit sound with filters
                 const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 2000 + Math.random() * 1000;
+                if (noteData.type === 'sawtooth') {
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 800;
+                } else {
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 1200;
+                }
                 
                 const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0, startTime);
-                gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration * 0.9);
+                gainNode.gain.setValueAtTime(0, noteStart);
+                gainNode.gain.linearRampToValueAtTime(0.2, noteStart + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, noteStart + duration * 0.9);
                 
                 oscillator.connect(filter);
                 filter.connect(gainNode);
                 gainNode.connect(this.masterGain);
                 
-                oscillator.start(startTime);
-                oscillator.stop(startTime + duration);
-
-                // Add occasional distortion for cyberpunk effect
-                if (Math.random() > 0.7) {
-                    const distortion = this.audioContext.createWaveShaper();
-                    distortion.curve = this.makeDistortionCurve(400);
-                    gainNode.disconnect();
-                    gainNode.connect(distortion);
-                    distortion.connect(this.masterGain);
-                }
+                oscillator.start(noteStart);
+                oscillator.stop(noteStart + duration);
             }
 
-            makeDistortionCurve(amount) {
-                const k = typeof amount === 'number' ? amount : 50;
-                const n_samples = 44100;
-                const curve = new Float32Array(n_samples);
-                const deg = Math.PI / 180;
-                
-                for (let i = 0; i < n_samples; ++i) {
-                    const x = i * 2 / n_samples - 1;
-                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-                }
-                return curve;
-            }
-
-            createKickDrum(time) {
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.frequency.setValueAtTime(150, time);
-                oscillator.frequency.exponentialRampToValueAtTime(0.001, time + 0.5);
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(1, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                oscillator.start(time);
-                oscillator.stop(time + 0.5);
-            }
-
-            createSnareDrum(time) {
-                // Noise source
-                const bufferSize = this.audioContext.sampleRate * 0.1;
-                const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
-                const data = buffer.getChannelData(0);
-                
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-                
-                const noise = this.audioContext.createBufferSource();
-                noise.buffer = buffer;
-                
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'highpass';
-                filter.frequency.value = 1000;
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(1, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
-                
-                noise.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                noise.start(time);
-                noise.stop(time + 0.2);
-            }
-
-            playNote(noteData, measureStart) {
-                const frequency = this.noteToFrequency(noteData.note);
-                const startTime = measureStart + noteData.time;
-                this.createOscillator(frequency, noteData.type, noteData.duration, startTime);
-            }
-
-            playDrum(drumData, measureStart) {
-                const startTime = measureStart + drumData.time;
-                if (drumData.type === 'kick') {
-                    this.createKickDrum(startTime);
-                } else if (drumData.type === 'snare') {
-                    this.createSnareDrum(startTime);
-                }
-            }
-
-            scheduler() {
-                const secondsPerBeat = 60.0 / this.bpm;
-                const secondsPerMeasure = secondsPerBeat * 4;
-                
-                while (this.nextNoteTime < this.audioContext.currentTime + 0.1) {
-                    const measureStart = this.nextNoteTime;
-                    const measureIndex = Math.floor(this.current16thNote / 16) % 2;
-                    
-                    // Play melody
-                    this.melody.forEach(note => {
-                        this.playNote(note, measureStart);
-                    });
-                    
-                    // Play bass
-                    this.bassLine.forEach(note => {
-                        this.playNote(note, measureStart);
-                    });
-                    
-                    // Play drums
-                    this.drums.forEach(drum => {
-                        this.playDrum(drum, measureStart);
-                    });
-                    
-                    // Add cyberpunk effects randomly
-                    if (Math.random() > 0.8) {
-                        this.addCyberpunkEffect(measureStart + Math.random() * 4);
-                    }
-                    
-                    this.nextNoteTime += secondsPerMeasure;
-                    this.current16thNote += 16;
-                    
-                    // Loop every 2 measures
-                    if (this.current16thNote >= 32) {
-                        this.current16thNote = 0;
-                    }
-                }
-                this.timerID = setTimeout(() => this.scheduler(), 50);
-            }
-
-            addCyberpunkEffect(time) {
-                // Create a glitchy sweep effect
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(100, time);
-                oscillator.frequency.exponentialRampToValueAtTime(2000, time + 0.3);
-                
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 800;
-                filter.Q.value = 10;
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.1, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
-                
-                oscillator.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                oscillator.start(time);
-                oscillator.stop(time + 0.3);
-            }
-
-            start() {
-                if (!this.audioContext) this.init();
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume();
-                }
-                this.isPlaying = true;
-                this.current16thNote = 0;
-                this.nextNoteTime = this.audioContext.currentTime;
-                this.scheduler();
-                this.updateVisualizer();
-            }
-
-            stop() {
+            stopMusic() {
                 this.isPlaying = false;
-                if (this.timerID) clearTimeout(this.timerID);
+                this.currentMusic = null;
+            }
+
+            switchToGameMusic() {
+                this.playMusic('game');
+            }
+
+            switchToMainMusic() {
+                this.playMusic('main');
             }
 
             updateVisualizer() {
@@ -932,73 +848,308 @@
                 const now = Date.now() * 0.01;
                 
                 for (let i = 0; i < bars.length; i++) {
-                    const height = Math.max(5, (Math.sin(now + i * 0.5) + 1) * 25 + Math.random() * 10) + '%';
+                    const height = Math.max(8, (Math.sin(now + i * 0.3) + 1) * 20 + Math.random() * 5) + '%';
                     bars[i].style.height = height;
-                    // Color changes with the music
-                    const hue = (120 + Math.sin(now * 0.1 + i) * 60) % 360;
+                    const hue = (120 + Math.sin(now * 0.05 + i * 0.5) * 40) % 360;
                     bars[i].style.background = `hsl(${hue}, 100%, 50%)`;
                 }
                 requestAnimationFrame(() => this.updateVisualizer());
             }
+        }
 
-            toggle() {
-                if (this.isPlaying) {
-                    this.stop();
-                } else {
-                    this.start();
-                }
-                return this.isPlaying;
+        // ==================== GAME SYSTEM ====================
+        let gameActive = false;
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let cyberAudio = null;
+
+        const gameCanvas = document.getElementById('gameCanvas');
+        const gameCtx = gameCanvas.getContext('2d');
+        const gameOverlay = document.getElementById('gameOverlay');
+
+        const paddle = {
+            width: 100,
+            height: 20,
+            x: gameCanvas.width / 2 - 50,
+            color: '#00ff88'
+        };
+
+        const ball = {
+            x: gameCanvas.width / 2,
+            y: gameCanvas.height / 2,
+            radius: 10,
+            speedX: 5,
+            speedY: 5,
+            color: '#0066ff',
+            trail: []
+        };
+
+        let bricks = [];
+
+        function activateGame() {
+            console.log("🎮 Starting game...");
+            gameOverlay.style.display = 'flex';
+            resizeGameCanvas();
+            
+            // Switch to game music
+            if (cyberAudio) {
+                cyberAudio.switchToGameMusic();
+            }
+            
+            resetGame();
+        }
+
+        function deactivateGame() {
+            gameOverlay.style.display = 'none';
+            gameActive = false;
+            
+            // Switch back to main music
+            if (cyberAudio) {
+                cyberAudio.switchToMainMusic();
             }
         }
 
-        // ==================== AUDIO PORTAL SYSTEM ====================
-        let cyberAudio = null;
-        let audioUnlocked = false;
+        function initGame() {
+            createBricks();
+            resetBall();
+            gameActive = true;
+            gameLoop();
+        }
 
+        function createBricks() {
+            bricks = [];
+            const colors = ['#00ff88', '#0066ff', '#aa00ff', '#ff00aa'];
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 8; col++) {
+                    bricks.push({
+                        x: col * (gameCanvas.width / 8),
+                        y: row * 30 + 50,
+                        width: gameCanvas.width / 8 - 5,
+                        height: 25,
+                        color: colors[row],
+                        alive: true
+                    });
+                }
+            }
+        }
+
+        function resetBall() {
+            ball.x = gameCanvas.width / 2;
+            ball.y = gameCanvas.height - 50;
+            ball.speedX = (Math.random() - 0.5) * 8;
+            ball.speedY = -5;
+            ball.trail = [];
+        }
+
+        function resetGame() {
+            score = 0;
+            lives = 3;
+            level = 1;
+            updateUI();
+            createBricks();
+            resetBall();
+            if (!gameActive) {
+                gameActive = true;
+                gameLoop();
+            }
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            gameCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+            drawMatrixBackground();
+            updateBall();
+            updatePaddle();
+            drawBricks();
+            drawPaddle();
+            drawBall();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function drawMatrixBackground() {
+            gameCtx.fillStyle = 'rgba(0, 255, 136, 0.05)';
+            for (let i = 0; i < 20; i++) {
+                gameCtx.fillRect(Math.random() * gameCanvas.width, Math.random() * gameCanvas.height, 2, Math.random() * 30 + 10);
+            }
+        }
+
+        function updateBall() {
+            ball.trail.push({x: ball.x, y: ball.y});
+            if (ball.trail.length > 8) ball.trail.shift();
+
+            ball.x += ball.speedX;
+            ball.y += ball.speedY;
+
+            if (ball.x + ball.radius > gameCanvas.width || ball.x - ball.radius < 0) {
+                ball.speedX = -ball.speedX;
+            }
+            if (ball.y - ball.radius < 0) {
+                ball.speedY = -ball.speedY;
+            }
+
+            if (ball.y + ball.radius > gameCanvas.height - paddle.height &&
+                ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+                const hitPos = (ball.x - paddle.x) / paddle.width;
+                ball.speedX = (hitPos - 0.5) * 12;
+                ball.speedY = -Math.abs(ball.speedY);
+                score += 10;
+                updateUI();
+            }
+
+            if (ball.y > gameCanvas.height) {
+                lives--;
+                updateUI();
+                if (lives <= 0) {
+                    gameOver();
+                } else {
+                    resetBall();
+                }
+            }
+
+            bricks.forEach(brick => {
+                if (brick.alive && 
+                    ball.x + ball.radius > brick.x && 
+                    ball.x - ball.radius < brick.x + brick.width &&
+                    ball.y + ball.radius > brick.y && 
+                    ball.y - ball.radius < brick.y + brick.height) {
+                    
+                    brick.alive = false;
+                    ball.speedY = -ball.speedY;
+                    score += 100;
+                    updateUI();
+
+                    if (bricks.every(b => !b.alive)) {
+                        levelUp();
+                    }
+                }
+            });
+        }
+
+        function updatePaddle() {
+            gameCanvas.addEventListener('mousemove', (e) => {
+                const rect = gameCanvas.getBoundingClientRect();
+                paddle.x = e.clientX - rect.left - paddle.width / 2;
+                if (paddle.x < 0) paddle.x = 0;
+                if (paddle.x + paddle.width > gameCanvas.width) {
+                    paddle.x = gameCanvas.width - paddle.width;
+                }
+            });
+        }
+
+        function drawBall() {
+            ball.trail.forEach((pos, index) => {
+                const alpha = 0.3 * (index / ball.trail.length);
+                gameCtx.beginPath();
+                gameCtx.arc(pos.x, pos.y, ball.radius * (index / ball.trail.length), 0, Math.PI * 2);
+                gameCtx.fillStyle = `rgba(0, 102, 255, ${alpha})`;
+                gameCtx.fill();
+            });
+
+            gameCtx.beginPath();
+            gameCtx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            gameCtx.fillStyle = ball.color;
+            gameCtx.fill();
+        }
+
+        function drawPaddle() {
+            gameCtx.fillStyle = paddle.color;
+            gameCtx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
+        }
+
+        function drawBricks() {
+            bricks.forEach(brick => {
+                if (brick.alive) {
+                    gameCtx.fillStyle = brick.color;
+                    gameCtx.fillRect(brick.x, brick.y, brick.width, brick.height);
+                }
+            });
+        }
+
+        function levelUp() {
+            level++;
+            updateUI();
+            createBricks();
+            resetBall();
+            ball.speedX *= 1.2;
+            ball.speedY *= 1.2;
+        }
+
+        function gameOver() {
+            gameActive = false;
+            gameCtx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+            gameCtx.font = '48px Orbitron';
+            gameCtx.textAlign = 'center';
+            gameCtx.fillText('MATRIX COLLAPSED', gameCanvas.width/2, gameCanvas.height/2);
+            gameCtx.font = '24px Orbitron';
+            gameCtx.fillText(`FINAL SCORE: ${score}`, gameCanvas.width/2, gameCanvas.height/2 + 50);
+        }
+
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('level').textContent = level;
+        }
+
+        function resizeGameCanvas() {
+            gameCanvas.width = Math.min(800, window.innerWidth - 40);
+            gameCanvas.height = Math.min(600, window.innerHeight - 100);
+            resetBall();
+        }
+
+        // ==================== AUDIO PORTAL SYSTEM ====================
         function enterWebsite() {
-            // Start audio system
-            initAudio();
+            // Initialize audio system
+            cyberAudio = new CyberpunkAudioSystem();
             
             // Hide portal and show main content
             document.getElementById('audioPortal').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             
-            // Start music
+            // Start main music automatically
             if (cyberAudio) {
-                cyberAudio.start();
+                cyberAudio.playMusic('main');
+                cyberAudio.updateVisualizer();
                 updateMusicButton(true);
             }
             
-            audioUnlocked = true;
-            console.log("🎵 Cyberpunk Megalovania Activated!");
-        }
-
-        function initAudio() {
-            if (!cyberAudio) {
-                cyberAudio = new CyberpunkMegalovania();
-            }
+            console.log("🎵 32-Bit Cyberpunk Audio Activated!");
         }
 
         function toggleMusic() {
-            if (!cyberAudio) {
-                initAudio();
-                return;
+            if (!cyberAudio) return;
+            
+            if (cyberAudio.isPlaying) {
+                cyberAudio.stopMusic();
+                updateMusicButton(false);
+            } else {
+                cyberAudio.playMusic('main');
+                cyberAudio.updateVisualizer();
+                updateMusicButton(true);
             }
-            const isPlaying = cyberAudio.toggle();
-            updateMusicButton(isPlaying);
         }
 
         function updateMusicButton(isPlaying) {
             const button = document.getElementById('musicToggle');
-            button.textContent = isPlaying ? '🔊 MEGALOVANIA ON' : '🔇 MEGALOVANIA OFF';
+            button.textContent = isPlaying ? '🔊 MUSIC ON' : '🔇 MUSIC OFF';
             button.style.borderColor = isPlaying ? '#00ff88' : '#ff0066';
         }
 
-        // ==================== GAME SYSTEM ====================
-        // ... (game code remains exactly the same as before)
-        // [Previous game code remains unchanged - too long to include here but it's the same]
+        // Initialize game when overlay is shown
+        gameOverlay.addEventListener('click', function initGameOnClick() {
+            if (!gameActive) {
+                initGame();
+                gameOverlay.removeEventListener('click', initGameOnClick);
+            }
+        });
 
-        console.log("🎵 Cyberpunk Megalovania Remix Ready!");
+        window.addEventListener('resize', resizeGameCanvas);
+
+        console.log("🚀 32-Bit Cyberpunk Experience Ready!");
     </script>
 </body>
 </html>
