@@ -6,17 +6,442 @@
     <title>RiceBean369 - Quantum Digital Dreamscape</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        /* Add this to your existing CSS - make sure game controls are visible */
+        /* Add this new audio portal at the top of your CSS */
         
+        .audio-portal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #000000 0%, #001100 100%);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .portal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            color: #00ff88;
+            text-shadow: 0 0 30px #00ff88;
+            margin-bottom: 2rem;
+            animation: portalPulse 2s infinite;
+        }
+
+        @keyframes portalPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .portal-subtitle {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            margin-bottom: 3rem;
+        }
+
+        .enter-button {
+            padding: 1.5rem 3rem;
+            background: transparent;
+            border: 3px solid #00ff88;
+            color: #00ff88;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            animation: buttonGlow 2s infinite;
+        }
+
+        @keyframes buttonGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(0, 255, 136, 0.8); }
+        }
+
+        .enter-button:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: scale(1.1);
+        }
+
+        .portal-instruction {
+            font-family: 'Orbitron', monospace;
+            color: #00ff88;
+            margin-top: 2rem;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Rest of your existing CSS remains the same */
+        :root {
+            --neon-green: #00ff88;
+            --neon-blue: #0066ff;
+            --neon-purple: #aa00ff;
+            --neon-pink: #ff00aa;
+            --matrix-glow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Quantum Background */
+        #quantumCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+
+        /* Holographic Interface */
+        .hologram {
+            position: relative;
+            background: rgba(0, 20, 40, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            box-shadow: var(--matrix-glow),
+                        inset 0 0 50px rgba(0, 255, 136, 0.1);
+        }
+
+        .hologram::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            border-radius: 17px;
+            z-index: -1;
+            animation: hologramBorder 3s linear infinite;
+        }
+
+        @keyframes hologramBorder {
+            0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
+            50% { opacity: 0.7; }
+        }
+
+        /* Main Layout */
+        .cyber-container {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Neural Network Background */
+        .neural-network {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        /* Header with 3D Effect */
+        .cyber-header {
+            position: relative;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0,255,136,0.1) 0%, transparent 100%);
+        }
+
+        .quantum-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            animation: titleGlitch 5s infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes titleGlitch {
+            0%, 100% { transform: translateX(0) skewX(0); }
+            95% { transform: translateX(0) skewX(0); }
+            96% { transform: translateX(-10px) skewX(-5deg); }
+            97% { transform: translateX(10px) skewX(5deg); }
+            98% { transform: translateX(-5px) skewX(-2deg); }
+        }
+
+        .slogan-3d {
+            font-size: 1.8rem;
+            color: var(--neon-green);
+            text-shadow: var(--matrix-glow);
+            transform: perspective(500px) rotateX(10deg);
+            animation: sloganFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes sloganFloat {
+            0%, 100% { transform: perspective(500px) rotateX(10deg) translateY(0); }
+            50% { transform: perspective(500px) rotateX(10deg) translateY(-10px); }
+        }
+
+        /* Quantum Navigation */
+        .quantum-nav {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 2rem;
+            background: rgba(0, 10, 20, 0.8);
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-portal {
+            position: relative;
+            padding: 1rem 2rem;
+            color: var(--neon-green);
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, transparent 50%, rgba(0, 255, 136, 0.1) 50%);
+            background-size: 300% 300%;
+            background-position: 100% 100%;
+        }
+
+        .nav-portal:hover {
+            background-position: 0% 0%;
+            border: 2px solid var(--neon-green);
+            box-shadow: var(--matrix-glow);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        /* Main Content Grid */
+        .cyber-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            padding: 4rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Holographic Cards */
+        .holo-card {
+            position: relative;
+            padding: 3rem;
+            min-height: 400px;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden;
+        }
+
+        .holo-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3),
+                        inset 0 0 100px rgba(0, 255, 136, 0.1);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cyber-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Quantum Buttons */
+        .quantum-btn {
+            position: relative;
+            padding: 1.5rem 3rem;
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .quantum-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .quantum-btn:hover::before {
+            left: 100%;
+        }
+
+        .quantum-btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+            box-shadow: var(--matrix-glow);
+            transform: translateY(-3px);
+        }
+
+        /* Animated Background Elements */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Audio Visualizer */
+        #visualizer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Terminal Effect */
+        .terminal-line {
+            opacity: 0;
+            animation: typeWriter 2s forwards;
+        }
+
+        @keyframes typeWriter {
+            to { opacity: 1; }
+        }
+
+        /* Music Controls */
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .music-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .music-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: var(--matrix-glow);
+        }
+
+        .visualizer {
+            width: 100px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--neon-green);
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            padding: 5px;
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--neon-green);
+            transition: height 0.1s ease;
+            border-radius: 1px;
+        }
+
+        .audio-credit {
+            font-size: 0.7rem;
+            color: var(--neon-green);
+            margin-top: 0.5rem;
+        }
+
+        /* Game Portal */
         .game-portal {
             position: fixed;
-            bottom: 100px; /* Moved up to be more visible */
+            bottom: 100px;
             right: 20px;
             z-index: 1000;
+            text-align: center;
         }
 
         .game-activator {
-            padding: 1rem 2rem;
+            padding: 1.5rem 2.5rem;
             background: rgba(0, 255, 136, 0.3);
             border: 3px solid var(--neon-green);
             color: var(--neon-green);
@@ -30,6 +455,7 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
             animation: pulse 2s infinite;
+            margin-bottom: 1rem;
         }
 
         @keyframes pulse {
@@ -44,7 +470,15 @@
             transform: scale(1.1);
         }
 
-        /* Game Overlay - Make sure it's properly styled */
+        .game-instructions {
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        /* Game Overlay */
         .game-overlay {
             position: fixed;
             top: 0;
@@ -107,72 +541,346 @@
             transform: translateY(-2px);
         }
 
-        .game-instructions {
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            margin-top: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .quantum-title { font-size: 3rem; }
+            .cyber-grid { grid-template-columns: 1fr; padding: 2rem; }
+            .quantum-nav { flex-direction: column; gap: 1rem; }
+            .game-activator { padding: 1rem 1.5rem; font-size: 0.9rem; }
+            .portal-title { font-size: 2.5rem; }
+            .portal-subtitle { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
-    <!-- ========== VISIBLE GAME PORTAL ========== -->
-    <div class="game-portal">
-        <button class="game-activator" onclick="activateGame()">🎮 PLAY CYBERPONG</button>
-        <div class="game-instructions">Move mouse to control paddle • Break all bricks!</div>
+    <!-- Audio Portal - This shows first and starts audio -->
+    <div class="audio-portal" id="audioPortal">
+        <div class="portal-title">RICEBEAN369</div>
+        <div class="portal-subtitle">QUANTUM DIGITAL DREAMSCAPE</div>
+        <button class="enter-button" onclick="enterWebsite()">ENTER MATRIX</button>
+        <div class="portal-instruction">Click to unlock audio and enter the experience</div>
     </div>
 
-    <!-- ========== GAME OVERLAY ========== -->
-    <div class="game-overlay" id="gameOverlay">
-        <div class="game-container">
-            <canvas id="gameCanvas" width="800" height="600"></canvas>
-            <div class="game-ui">
-                <div>SCORE: <span id="score">0</span></div>
-                <div>LIVES: <span id="lives">3</span></div>
-                <div>LEVEL: <span id="level">1</span></div>
+    <!-- Rest of your website content (initially hidden) -->
+    <div id="mainContent" style="display: none;">
+        <!-- Custom Cursor -->
+        <div class="cursor"></div>
+        <div class="cursor-follower"></div>
+
+        <!-- Quantum Background Canvas -->
+        <canvas id="quantumCanvas"></canvas>
+
+        <!-- Neural Network -->
+        <canvas class="neural-network"></canvas>
+
+        <!-- Floating Shapes -->
+        <div class="floating-shapes" id="floatingShapes"></div>
+
+        <!-- Audio Visualizer -->
+        <canvas id="visualizer"></canvas>
+
+        <!-- Music Controls -->
+        <div class="music-controls">
+            <button class="music-btn" onclick="toggleMusic()" id="musicToggle">🎵 MUSIC ON</button>
+            <div class="visualizer" id="audioVisualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
             </div>
+            <div class="audio-credit">CYBERPUNK MONSTER PARTY REMIX</div>
         </div>
-        <div class="game-controls">
-            <button class="close-game" onclick="deactivateGame()">EXIT MATRIX</button>
-            <button class="reset-game" onclick="resetGame()">RESET REALITY</button>
+
+        <!-- Game Portal -->
+        <div class="game-portal">
+            <button class="game-activator" onclick="activateGame()">🎮 PLAY CYBERPONG</button>
+            <div class="game-instructions">Move mouse to control paddle • Break all bricks!</div>
         </div>
-        <div class="game-instructions">Move your mouse left/right to control the paddle • Don't let the ball fall!</div>
-    </div>
 
-    <!-- Your existing website content goes here -->
-    <div class="cyber-container">
-        <!-- Your header, navigation, sections etc. -->
-        <header class="cyber-header">
-            <h1 class="quantum-title">RICEBEAN369</h1>
-            <div class="slogan-3d">WHERE QUANTUM DREAMS BECOME DIGITAL REALITY</div>
-        </header>
+        <!-- Game Overlay -->
+        <div class="game-overlay" id="gameOverlay">
+            <div class="game-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <div class="game-ui">
+                    <div>SCORE: <span id="score">0</span></div>
+                    <div>LIVES: <span id="lives">3</span></div>
+                    <div>LEVEL: <span id="level">1</span></div>
+                </div>
+            </div>
+            <div class="game-controls">
+                <button class="close-game" onclick="deactivateGame()">EXIT MATRIX</button>
+                <button class="reset-game" onclick="resetGame()">RESET REALITY</button>
+            </div>
+            <div class="game-instructions">Move your mouse left/right to control the paddle • Don't let the ball fall!</div>
+        </div>
 
-        <!-- Your other content -->
+        <!-- Main Website Content -->
+        <div class="cyber-container">
+            <header class="cyber-header">
+                <h1 class="quantum-title">RICEBEAN369</h1>
+                <div class="slogan-3d">WHERE QUANTUM DREAMS BECOME DIGITAL REALITY</div>
+            </header>
+
+            <nav class="quantum-nav">
+                <a href="#home" class="nav-portal">Quantum Home</a>
+                <a href="#about" class="nav-portal">Neural Core</a>
+                <a href="#projects" class="nav-portal">Digital Genesis</a>
+                <a href="#contact" class="nav-portal">Transmission</a>
+            </nav>
+
+            <main class="cyber-grid">
+                <section id="home" class="holo-card hologram">
+                    <h2 class="card-title">SYSTEM BOOT</h2>
+                    <p class="cyber-text terminal-line" style="animation-delay: 0.5s;">> Initializing quantum dream processor...</p>
+                    <p class="cyber-text terminal-line" style="animation-delay: 1s;">> Loading neural interface protocols...</p>
+                    <p class="cyber-text terminal-line" style="animation-delay: 1.5s;">> Establishing connection to digital consciousness...</p>
+                    <p class="cyber-text terminal-line" style="animation-delay: 2s;">> Welcome to the next dimension of web development.</p>
+                    <button class="quantum-btn">ACTIVATE QUANTUM MODE</button>
+                </section>
+
+                <section id="about" class="holo-card hologram">
+                    <h2 class="card-title">NEURAL CORE</h2>
+                    <p class="cyber-text">> Quantum Developer Matrix: ONLINE</p>
+                    <p class="cyber-text">> Reality Distortion Field: ACTIVE</p>
+                    <p class="cyber-text">> Dream Compilation Engine: OPTIMIZED</p>
+                    <p class="cyber-text">> Specializing in bending reality through code and creating digital experiences that transcend imagination.</p>
+                </section>
+
+                <section id="projects" class="holo-card hologram">
+                    <h2 class="card-title">DIGITAL GENESIS</h2>
+                    <p class="cyber-text">> Project T-800: DREAM COMPILER</p>
+                    <p class="cyber-text">> Status: QUANTUM ENTANGLED</p>
+                    <p class="cyber-text">> Project M-400: REALITY ENGINE</p>
+                    <p class="cyber-text">> Status: DIMENSION HOPPING</p>
+                    <p class="cyber-text">> Project X-900: NEURAL INTERFACE</p>
+                    <p class="cyber-text">> Status: CONSCIOUSNESS SYNCHRONIZED</p>
+                </section>
+
+                <section id="contact" class="holo-card hologram">
+                    <h2 class="card-title">QUANTUM TRANSMISSION</h2>
+                    <p class="cyber-text">> Transmission Protocol: QUANTUM ENTANGLED</p>
+                    <p class="cyber-text">> Bandwidth: INFINITE</p>
+                    <p class="cyber-text">> Destination: hello@ricebean369.com</p>
+                    <p class="cyber-text">> Ready to receive your quantum dreams...</p>
+                    <button class="quantum-btn">INITIATE TRANSMISSION</button>
+                </section>
+            </main>
+        </div>
     </div>
 
     <script>
-        // ==================== GAME VARIABLES ====================
+        // ==================== AUDIO PORTAL SYSTEM ====================
+        let cyberAudio = null;
+        let audioUnlocked = false;
+
+        function enterWebsite() {
+            // Start audio system
+            initAudio();
+            
+            // Hide portal and show main content
+            document.getElementById('audioPortal').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // Start music
+            if (cyberAudio) {
+                cyberAudio.start();
+                updateMusicButton(true);
+            }
+            
+            audioUnlocked = true;
+            console.log("🎵 Audio unlocked - Welcome to the Matrix!");
+        }
+
+        // ==================== CYBERPUNK AUDIO SYSTEM ====================
+        class CyberpunkAudio {
+            constructor() {
+                this.audioContext = null;
+                this.isPlaying = false;
+                this.masterGain = null;
+                this.analyser = null;
+                this.bpm = 128;
+                this.current16thNote = 0;
+                this.nextNoteTime = 0.0;
+                this.timerID = null;
+                
+                this.melody = [
+                    { note: 'C5', duration: 0.5, type: 'square' },
+                    { note: 'E5', duration: 0.5, type: 'square' },
+                    { note: 'G5', duration: 0.5, type: 'square' },
+                    { note: 'C6', duration: 1.0, type: 'square' },
+                    { note: 'G5', duration: 0.5, type: 'square' },
+                    { note: 'E5', duration: 0.5, type: 'square' },
+                    { note: 'C5', duration: 1.0, type: 'square' },
+                    { note: 'A4', duration: 0.25, type: 'sawtooth' },
+                    { note: 'C5', duration: 0.25, type: 'sawtooth' },
+                    { note: 'E5', duration: 0.25, type: 'sawtooth' },
+                    { note: 'G5', duration: 0.25, type: 'sawtooth' }
+                ];
+
+                this.bassLine = [
+                    { note: 'C2', duration: 2.0 },
+                    { note: 'G2', duration: 2.0 },
+                    { note: 'C2', duration: 2.0 },
+                    { note: 'F2', duration: 2.0 }
+                ];
+
+                this.init();
+            }
+
+            init() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.gain.value = 0.3;
+                    this.masterGain.connect(this.audioContext.destination);
+
+                    this.analyser = this.audioContext.createAnalyser();
+                    this.analyser.fftSize = 256;
+                    this.masterGain.connect(this.analyser);
+
+                    console.log('Cyberpunk Audio System: ONLINE');
+                } catch (e) {
+                    console.log('Web Audio API not supported:', e);
+                }
+            }
+
+            noteToFrequency(note) {
+                const notes = {
+                    'C2': 65.41, 'G2': 98.00, 'F2': 87.31,
+                    'A4': 440.00, 'C5': 523.25, 'E5': 659.25, 
+                    'G5': 783.99, 'C6': 1046.50
+                };
+                return notes[note] || 440;
+            }
+
+            createOscillator(frequency, type, duration) {
+                const now = this.audioContext.currentTime;
+                const oscillator = this.audioContext.createOscillator();
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+                
+                const gainNode = this.audioContext.createGain();
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.8);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.masterGain);
+                
+                oscillator.start(now);
+                oscillator.stop(now + duration);
+            }
+
+            playNote(noteData, time) {
+                const frequency = this.noteToFrequency(noteData.note);
+                this.createOscillator(frequency, noteData.type, noteData.duration);
+            }
+
+            scheduler() {
+                while (this.nextNoteTime < this.audioContext.currentTime + 0.1) {
+                    const melodyIndex = this.current16thNote % this.melody.length;
+                    const bassIndex = Math.floor(this.current16thNote / 8) % this.bassLine.length;
+                    
+                    if (this.melody[melodyIndex]) {
+                        this.playNote(this.melody[melodyIndex], this.nextNoteTime - this.audioContext.currentTime);
+                    }
+                    
+                    if (this.current16thNote % 8 === 0 && this.bassLine[bassIndex]) {
+                        this.playNote({...this.bassLine[bassIndex], type: 'triangle'}, this.nextNoteTime - this.audioContext.currentTime);
+                    }
+                    
+                    this.nextNote();
+                }
+                this.timerID = setTimeout(() => this.scheduler(), 50);
+            }
+
+            nextNote() {
+                const secondsPerBeat = 60.0 / this.bpm;
+                this.nextNoteTime += 0.25 * secondsPerBeat;
+                this.current16thNote++;
+                if (this.current16thNote === 32) this.current16thNote = 0;
+            }
+
+            start() {
+                if (!this.audioContext) this.init();
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+                this.isPlaying = true;
+                this.current16thNote = 0;
+                this.nextNoteTime = this.audioContext.currentTime;
+                this.scheduler();
+                this.updateVisualizer();
+            }
+
+            stop() {
+                this.isPlaying = false;
+                if (this.timerID) clearTimeout(this.timerID);
+            }
+
+            updateVisualizer() {
+                if (!this.isPlaying) return;
+                const bars = document.querySelectorAll('#audioVisualizer .bar');
+                for (let i = 0; i < bars.length; i++) {
+                    const height = Math.max(5, (Math.sin(Date.now() * 0.01 + i) + 1) * 20) + '%';
+                    bars[i].style.height = height;
+                }
+                requestAnimationFrame(() => this.updateVisualizer());
+            }
+
+            toggle() {
+                if (this.isPlaying) {
+                    this.stop();
+                } else {
+                    this.start();
+                }
+                return this.isPlaying;
+            }
+        }
+
+        function initAudio() {
+            if (!cyberAudio) {
+                cyberAudio = new CyberpunkAudio();
+            }
+        }
+
+        function toggleMusic() {
+            if (!cyberAudio) {
+                initAudio();
+                return;
+            }
+            const isPlaying = cyberAudio.toggle();
+            updateMusicButton(isPlaying);
+        }
+
+        function updateMusicButton(isPlaying) {
+            const button = document.getElementById('musicToggle');
+            button.textContent = isPlaying ? '🔊 MUSIC ON' : '🔇 MUSIC OFF';
+            button.style.borderColor = isPlaying ? '#00ff88' : '#ff0066';
+        }
+
+        // ==================== GAME SYSTEM ====================
+        // ... (game code remains exactly the same as before)
         let gameActive = false;
         let score = 0;
         let lives = 3;
         let level = 1;
 
-        // Game elements
         const gameCanvas = document.getElementById('gameCanvas');
-        const ctx = gameCanvas.getContext('2d');
+        const gameCtx = gameCanvas.getContext('2d');
         const gameOverlay = document.getElementById('gameOverlay');
 
-        // Paddle
         const paddle = {
             width: 100,
             height: 20,
             x: gameCanvas.width / 2 - 50,
-            speed: 8,
             color: '#00ff88'
         };
 
-        // Ball
         const ball = {
             x: gameCanvas.width / 2,
             y: gameCanvas.height / 2,
@@ -183,19 +891,9 @@
             trail: []
         };
 
-        // Bricks
         let bricks = [];
-        const brickRows = 4;
-        const brickCols = 8;
-
-        // Power-ups
-        let powerUps = [];
-        const powerUpTypes = ['expand', 'laser', 'multiball', 'slowmo'];
-
-        // ==================== GAME FUNCTIONS ====================
 
         function activateGame() {
-            console.log("🎮 Activating CyberPong...");
             gameOverlay.style.display = 'flex';
             resetGame();
         }
@@ -215,13 +913,12 @@
         function createBricks() {
             bricks = [];
             const colors = ['#00ff88', '#0066ff', '#aa00ff', '#ff00aa'];
-            
-            for (let row = 0; row < brickRows; row++) {
-                for (let col = 0; col < brickCols; col++) {
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 8; col++) {
                     bricks.push({
-                        x: col * (gameCanvas.width / brickCols),
+                        x: col * (gameCanvas.width / 8),
                         y: row * 30 + 50,
-                        width: gameCanvas.width / brickCols - 5,
+                        width: gameCanvas.width / 8 - 5,
                         height: 25,
                         color: colors[row],
                         alive: true
@@ -242,7 +939,6 @@
             score = 0;
             lives = 3;
             level = 1;
-            powerUps = [];
             updateUI();
             createBricks();
             resetBall();
@@ -252,51 +948,36 @@
             }
         }
 
-        // ==================== GAME LOOP ====================
-
         function gameLoop() {
             if (!gameActive) return;
 
-            // Clear canvas with fade effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
-            // Draw matrix background
             drawMatrixBackground();
-
-            // Update game state
             updateBall();
             updatePaddle();
-            updatePowerUps();
-
-            // Draw everything
             drawBricks();
             drawPaddle();
             drawBall();
-            drawPowerUps();
 
             requestAnimationFrame(gameLoop);
         }
 
         function drawMatrixBackground() {
-            ctx.fillStyle = 'rgba(0, 255, 136, 0.05)';
+            gameCtx.fillStyle = 'rgba(0, 255, 136, 0.05)';
             for (let i = 0; i < 20; i++) {
-                const x = Math.random() * gameCanvas.width;
-                const y = Math.random() * gameCanvas.height;
-                ctx.fillRect(x, y, 2, Math.random() * 30 + 10);
+                gameCtx.fillRect(Math.random() * gameCanvas.width, Math.random() * gameCanvas.height, 2, Math.random() * 30 + 10);
             }
         }
 
         function updateBall() {
-            // Add ball to trail
             ball.trail.push({x: ball.x, y: ball.y});
             if (ball.trail.length > 8) ball.trail.shift();
 
-            // Move ball
             ball.x += ball.speedX;
             ball.y += ball.speedY;
 
-            // Wall collisions
             if (ball.x + ball.radius > gameCanvas.width || ball.x - ball.radius < 0) {
                 ball.speedX = -ball.speedX;
             }
@@ -304,21 +985,15 @@
                 ball.speedY = -ball.speedY;
             }
 
-            // Paddle collision
             if (ball.y + ball.radius > gameCanvas.height - paddle.height &&
                 ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-                
                 const hitPos = (ball.x - paddle.x) / paddle.width;
                 ball.speedX = (hitPos - 0.5) * 12;
                 ball.speedY = -Math.abs(ball.speedY);
                 score += 10;
                 updateUI();
-                
-                // Play sound if audio is available
-                if (window.playGameSound) playGameSound('paddleHit');
             }
 
-            // Bottom boundary - lose life
             if (ball.y > gameCanvas.height) {
                 lives--;
                 updateUI();
@@ -329,7 +1004,6 @@
                 }
             }
 
-            // Brick collisions
             bricks.forEach(brick => {
                 if (brick.alive && 
                     ball.x + ball.radius > brick.x && 
@@ -342,10 +1016,6 @@
                     score += 100;
                     updateUI();
 
-                    // Play sound if audio is available
-                    if (window.playGameSound) playGameSound('brickBreak');
-
-                    // Check for level completion
                     if (bricks.every(b => !b.alive)) {
                         levelUp();
                     }
@@ -354,12 +1024,9 @@
         }
 
         function updatePaddle() {
-            // Mouse control
             gameCanvas.addEventListener('mousemove', (e) => {
                 const rect = gameCanvas.getBoundingClientRect();
                 paddle.x = e.clientX - rect.left - paddle.width / 2;
-                
-                // Keep paddle in bounds
                 if (paddle.x < 0) paddle.x = 0;
                 if (paddle.x + paddle.width > gameCanvas.width) {
                     paddle.x = gameCanvas.width - paddle.width;
@@ -367,63 +1034,33 @@
             });
         }
 
-        function updatePowerUps() {
-            // Power-up logic would go here
-        }
-
         function drawBall() {
-            // Draw trail
             ball.trail.forEach((pos, index) => {
                 const alpha = 0.3 * (index / ball.trail.length);
-                const radius = ball.radius * (index / ball.trail.length);
-                
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 102, 255, ${alpha})`;
-                ctx.fill();
+                gameCtx.beginPath();
+                gameCtx.arc(pos.x, pos.y, ball.radius * (index / ball.trail.length), 0, Math.PI * 2);
+                gameCtx.fillStyle = `rgba(0, 102, 255, ${alpha})`;
+                gameCtx.fill();
             });
 
-            // Draw main ball
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fillStyle = ball.color;
-            ctx.fill();
-
-            // Glow effect
-            ctx.shadowColor = ball.color;
-            ctx.shadowBlur = 20;
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            gameCtx.beginPath();
+            gameCtx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            gameCtx.fillStyle = ball.color;
+            gameCtx.fill();
         }
 
         function drawPaddle() {
-            ctx.fillStyle = paddle.color;
-            ctx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
-            
-            // Glow effect
-            ctx.shadowColor = paddle.color;
-            ctx.shadowBlur = 15;
-            ctx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
-            ctx.shadowBlur = 0;
+            gameCtx.fillStyle = paddle.color;
+            gameCtx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
         }
 
         function drawBricks() {
             bricks.forEach(brick => {
                 if (brick.alive) {
-                    ctx.fillStyle = brick.color;
-                    ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
-                    
-                    // Glow effect
-                    ctx.shadowColor = brick.color;
-                    ctx.shadowBlur = 10;
-                    ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
-                    ctx.shadowBlur = 0;
+                    gameCtx.fillStyle = brick.color;
+                    gameCtx.fillRect(brick.x, brick.y, brick.width, brick.height);
                 }
             });
-        }
-
-        function drawPowerUps() {
-            // Power-up drawing logic would go here
         }
 
         function levelUp() {
@@ -431,21 +1068,18 @@
             updateUI();
             createBricks();
             resetBall();
-            // Increase difficulty
             ball.speedX *= 1.2;
             ball.speedY *= 1.2;
         }
 
         function gameOver() {
             gameActive = false;
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
-            ctx.font = '48px Orbitron';
-            ctx.textAlign = 'center';
-            ctx.fillText('MATRIX COLLAPSED', gameCanvas.width/2, gameCanvas.height/2);
-            ctx.font = '24px Orbitron';
-            ctx.fillText(`FINAL SCORE: ${score}`, gameCanvas.width/2, gameCanvas.height/2 + 50);
-            
-            if (window.playGameSound) playGameSound('gameOver');
+            gameCtx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+            gameCtx.font = '48px Orbitron';
+            gameCtx.textAlign = 'center';
+            gameCtx.fillText('MATRIX COLLAPSED', gameCanvas.width/2, gameCanvas.height/2);
+            gameCtx.font = '24px Orbitron';
+            gameCtx.fillText(`FINAL SCORE: ${score}`, gameCanvas.width/2, gameCanvas.height/2 + 50);
         }
 
         function updateUI() {
@@ -454,40 +1088,16 @@
             document.getElementById('level').textContent = level;
         }
 
-        // Make canvas responsive
+        // Make game canvas responsive
         function resizeGameCanvas() {
-            const container = gameOverlay;
-            gameCanvas.width = Math.min(800, container.clientWidth - 40);
-            gameCanvas.height = Math.min(600, container.clientHeight - 100);
+            gameCanvas.width = Math.min(800, window.innerWidth - 40);
+            gameCanvas.height = Math.min(600, window.innerHeight - 100);
             resetBall();
         }
 
         window.addEventListener('resize', resizeGameCanvas);
 
-        // Initialize game canvas when overlay is shown
-        gameOverlay.addEventListener('click', () => {
-            if (!gameActive) {
-                resizeGameCanvas();
-            }
-        });
-
-        // Start game when overlay is activated
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                    if (gameOverlay.style.display === 'flex') {
-                        resizeGameCanvas();
-                    }
-                }
-            });
-        });
-        
-        observer.observe(gameOverlay, {
-            attributes: true,
-            attributeFilter: ['style']
-        });
-
-        console.log("🎮 CyberPong Game Loaded - Click the glowing button to play!");
+        console.log("🎵 Website ready - Audio will play after user interaction!");
     </script>
 </body>
 </html>
