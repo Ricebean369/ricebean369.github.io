@@ -6,479 +6,330 @@
     <title>RiceBean369 - Quantum Digital Dreamscape</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        /* Previous styles remain, adding music controls */
-
-        .music-controls {
+        /* Add this to your existing CSS - make sure game controls are visible */
+        
+        .game-portal {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 100px; /* Moved up to be more visible */
+            right: 20px;
             z-index: 1000;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
         }
 
-        .music-btn {
-            padding: 0.8rem 1.5rem;
-            background: rgba(0, 255, 136, 0.1);
-            border: 2px solid var(--neon-green);
+        .game-activator {
+            padding: 1rem 2rem;
+            background: rgba(0, 255, 136, 0.3);
+            border: 3px solid var(--neon-green);
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 255, 136, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+        }
+
+        .game-activator:hover {
+            background: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 1);
+            transform: scale(1.1);
+        }
+
+        /* Game Overlay - Make sure it's properly styled */
+        .game-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .game-container {
+            position: relative;
+            border: 3px solid var(--neon-green);
+            box-shadow: var(--matrix-glow);
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #gameCanvas {
+            background: #000;
+            display: block;
+        }
+
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .game-controls {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .close-game, .reset-game {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--neon-pink);
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .music-btn:hover {
-            background: rgba(0, 255, 136, 0.3);
-            box-shadow: var(--matrix-glow);
+        .close-game:hover, .reset-game:hover {
+            background: rgba(255, 0, 170, 0.2);
+            box-shadow: 0 0 20px var(--neon-pink);
+            transform: translateY(-2px);
         }
 
-        .visualizer {
-            width: 100px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--neon-green);
-            display: flex;
-            align-items: end;
-            gap: 2px;
-            padding: 5px;
-        }
-
-        .bar {
-            flex: 1;
-            background: var(--neon-green);
-            transition: height 0.1s ease;
-            border-radius: 1px;
-        }
-
-        .audio-credit {
-            font-size: 0.7rem;
+        .game-instructions {
             color: var(--neon-green);
-            margin-top: 0.5rem;
+            font-family: 'Orbitron', monospace;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <!-- Add music controls to your existing HTML -->
-    <div class="music-controls">
-        <button class="music-btn" onclick="toggleMusic()" id="musicToggle">🎵 MUSIC ON</button>
-        <div class="visualizer" id="visualizer">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-        <div class="audio-credit">CYBERPUNK MONSTER PARTY REMIX</div>
+    <!-- ========== VISIBLE GAME PORTAL ========== -->
+    <div class="game-portal">
+        <button class="game-activator" onclick="activateGame()">🎮 PLAY CYBERPONG</button>
+        <div class="game-instructions">Move mouse to control paddle • Break all bricks!</div>
     </div>
 
-    <!-- Rest of your HTML content -->
+    <!-- ========== GAME OVERLAY ========== -->
+    <div class="game-overlay" id="gameOverlay">
+        <div class="game-container">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="game-ui">
+                <div>SCORE: <span id="score">0</span></div>
+                <div>LIVES: <span id="lives">3</span></div>
+                <div>LEVEL: <span id="level">1</span></div>
+            </div>
+        </div>
+        <div class="game-controls">
+            <button class="close-game" onclick="deactivateGame()">EXIT MATRIX</button>
+            <button class="reset-game" onclick="resetGame()">RESET REALITY</button>
+        </div>
+        <div class="game-instructions">Move your mouse left/right to control the paddle • Don't let the ball fall!</div>
+    </div>
+
+    <!-- Your existing website content goes here -->
+    <div class="cyber-container">
+        <!-- Your header, navigation, sections etc. -->
+        <header class="cyber-header">
+            <h1 class="quantum-title">RICEBEAN369</h1>
+            <div class="slogan-3d">WHERE QUANTUM DREAMS BECOME DIGITAL REALITY</div>
+        </header>
+
+        <!-- Your other content -->
+    </div>
 
     <script>
-        // ==================== CYBERPUNK 8-BIT MUSIC SYSTEM ====================
+        // ==================== GAME VARIABLES ====================
+        let gameActive = false;
+        let score = 0;
+        let lives = 3;
+        let level = 1;
 
-        class CyberpunkAudio {
-            constructor() {
-                this.audioContext = null;
-                this.isPlaying = false;
-                this.masterGain = null;
-                this.analyser = null;
-                this.dataArray = null;
-                this.bufferLength = null;
-                this.currentSequence = null;
-                this.visualizerBars = null;
-                
-                this.bpm = 128; // Faster BPM for cyberpunk feel
-                this.noteTime = 0.0;
-                this.current16thNote = 0;
-                this.scheduleAheadTime = 0.1;
-                this.nextNoteTime = 0.0;
-                this.timerID = null;
-                
-                this.init();
-            }
+        // Game elements
+        const gameCanvas = document.getElementById('gameCanvas');
+        const ctx = gameCanvas.getContext('2d');
+        const gameOverlay = document.getElementById('gameOverlay');
 
-            init() {
-                try {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    this.masterGain = this.audioContext.createGain();
-                    this.masterGain.gain.value = 0.3; // Lower volume for background
-                    this.masterGain.connect(this.audioContext.destination);
+        // Paddle
+        const paddle = {
+            width: 100,
+            height: 20,
+            x: gameCanvas.width / 2 - 50,
+            speed: 8,
+            color: '#00ff88'
+        };
 
-                    // Create analyser for visualizer
-                    this.analyser = this.audioContext.createAnalyser();
-                    this.analyser.fftSize = 256;
-                    this.bufferLength = this.analyser.frequencyBinCount;
-                    this.dataArray = new Uint8Array(this.bufferLength);
-                    this.masterGain.connect(this.analyser);
+        // Ball
+        const ball = {
+            x: gameCanvas.width / 2,
+            y: gameCanvas.height / 2,
+            radius: 10,
+            speedX: 5,
+            speedY: 5,
+            color: '#0066ff',
+            trail: []
+        };
 
-                    this.visualizerBars = document.querySelectorAll('.visualizer .bar');
-                    
-                    // Monster Party inspired melody with cyberpunk twist
-                    this.melody = [
-                        // Main theme - higher octave, faster tempo
-                        { note: 'C5', duration: 0.5, type: 'square' },
-                        { note: 'E5', duration: 0.5, type: 'square' },
-                        { note: 'G5', duration: 0.5, type: 'square' },
-                        { note: 'C6', duration: 1.0, type: 'square' },
-                        { note: 'G5', duration: 0.5, type: 'square' },
-                        { note: 'E5', duration: 0.5, type: 'square' },
-                        { note: 'C5', duration: 1.0, type: 'square' },
-                        
-                        // Cyberpunk arpeggio section
-                        { note: 'A4', duration: 0.25, type: 'sawtooth' },
-                        { note: 'C5', duration: 0.25, type: 'sawtooth' },
-                        { note: 'E5', duration: 0.25, type: 'sawtooth' },
-                        { note: 'G5', duration: 0.25, type: 'sawtooth' },
-                        { note: 'E5', duration: 0.25, type: 'sawtooth' },
-                        { note: 'C5', duration: 0.25, type: 'sawtooth' },
-                        { note: 'A4', duration: 0.5, type: 'sawtooth' },
-                        
-                        // Bass line - deeper for cyberpunk feel
-                        { note: 'C2', duration: 1.0, type: 'triangle' },
-                        { note: 'G2', duration: 1.0, type: 'triangle' },
-                        { note: 'C2', duration: 1.0, type: 'triangle' },
-                        { note: 'F2', duration: 1.0, type: 'triangle' },
-                        
-                        // Melody variation with distortion
-                        { note: 'D5', duration: 0.25, type: 'square' },
-                        { note: 'F5', duration: 0.25, type: 'square' },
-                        { note: 'A5', duration: 0.25, type: 'square' },
-                        { note: 'D6', duration: 0.75, type: 'square' },
-                        { note: 'C6', duration: 0.25, type: 'square' },
-                        { note: 'A5', duration: 0.25, type: 'square' },
-                        { note: 'F5', duration: 0.25, type: 'square' },
-                        { note: 'D5', duration: 0.25, type: 'square' }
-                    ];
+        // Bricks
+        let bricks = [];
+        const brickRows = 4;
+        const brickCols = 8;
 
-                    this.bassLine = [
-                        { note: 'C2', duration: 2.0 },
-                        { note: 'G2', duration: 2.0 },
-                        { note: 'C2', duration: 2.0 },
-                        { note: 'F2', duration: 2.0 }
-                    ];
+        // Power-ups
+        let powerUps = [];
+        const powerUpTypes = ['expand', 'laser', 'multiball', 'slowmo'];
 
-                    console.log('Cyberpunk Audio System: ONLINE');
-                } catch (e) {
-                    console.log('Web Audio API not supported:', e);
-                }
-            }
+        // ==================== GAME FUNCTIONS ====================
 
-            // Convert note name to frequency
-            noteToFrequency(note) {
-                const notes = {
-                    'C2': 65.41, 'D2': 73.42, 'E2': 82.41, 'F2': 87.31, 'G2': 98.00, 'A2': 110.00, 'B2': 123.47,
-                    'C3': 130.81, 'D3': 146.83, 'E3': 164.81, 'F3': 174.61, 'G3': 196.00, 'A3': 220.00, 'B3': 246.94,
-                    'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
-                    'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.00, 'B5': 987.77,
-                    'C6': 1046.50, 'D6': 1174.66, 'E6': 1318.51, 'F6': 1396.91, 'G6': 1567.98, 'A6': 1760.00, 'B6': 1975.53
-                };
-                return notes[note] || 440;
-            }
-
-            // Create oscillator with cyberpunk effects
-            createOscillator(frequency, type, duration) {
-                const now = this.audioContext.currentTime;
-                
-                // Main oscillator
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.type = type;
-                oscillator.frequency.value = frequency;
-                
-                // Add LFO for vibrato
-                const lfo = this.audioContext.createOscillator();
-                lfo.frequency.value = 8; // Slow vibrato
-                const lfoGain = this.audioContext.createGain();
-                lfoGain.gain.value = frequency * 0.01; // Subtle pitch modulation
-                lfo.connect(lfoGain);
-                lfoGain.connect(oscillator.frequency);
-                
-                // Create gain node for envelope
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0, now);
-                gainNode.gain.linearRampToValueAtTime(0.8, now + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.8);
-                
-                // Add filter for cyberpunk sound
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 2000;
-                filter.Q.value = 1;
-                
-                // Connect everything
-                oscillator.connect(gainNode);
-                gainNode.connect(filter);
-                filter.connect(this.masterGain);
-                
-                // Add distortion for certain notes
-                if (Math.random() > 0.7) {
-                    const distortion = this.audioContext.createWaveShaper();
-                    distortion.curve = this.makeDistortionCurve(400);
-                    gainNode.disconnect();
-                    gainNode.connect(distortion);
-                    distortion.connect(filter);
-                }
-                
-                // Start oscillators
-                oscillator.start(now);
-                lfo.start(now);
-                oscillator.stop(now + duration);
-                lfo.stop(now + duration);
-                
-                return oscillator;
-            }
-
-            // Create distortion curve for cyberpunk effect
-            makeDistortionCurve(amount) {
-                const k = typeof amount === 'number' ? amount : 50;
-                const n_samples = 44100;
-                const curve = new Float32Array(n_samples);
-                const deg = Math.PI / 180;
-                
-                for (let i = 0; i < n_samples; ++i) {
-                    const x = i * 2 / n_samples - 1;
-                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-                }
-                return curve;
-            }
-
-            // Play a single note
-            playNote(noteData, time) {
-                const frequency = this.noteToFrequency(noteData.note);
-                this.createOscillator(frequency, noteData.type, noteData.duration);
-                
-                // Add occasional cyberpunk effects
-                if (Math.random() > 0.8) {
-                    this.playEffect(time);
-                }
-            }
-
-            // Play cyberpunk sound effects
-            playEffect(time) {
-                const now = this.audioContext.currentTime + time;
-                
-                // Create noise burst
-                const bufferSize = this.audioContext.sampleRate * 0.1;
-                const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
-                const data = buffer.getChannelData(0);
-                
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-                
-                const noise = this.audioContext.createBufferSource();
-                noise.buffer = buffer;
-                
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 800 + Math.random() * 2000;
-                filter.Q.value = 1;
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.1, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                
-                noise.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                noise.start(now);
-                noise.stop(now + 0.1);
-            }
-
-            // Scheduler for continuous music
-            scheduler() {
-                while (this.nextNoteTime < this.audioContext.currentTime + this.scheduleAheadTime) {
-                    this.scheduleNote(this.current16thNote, this.nextNoteTime);
-                    this.nextNote();
-                }
-                this.timerID = setTimeout(() => this.scheduler(), 50);
-            }
-
-            scheduleNote(beatNumber, time) {
-                const melodyIndex = beatNumber % this.melody.length;
-                const bassIndex = Math.floor(beatNumber / 4) % this.bassLine.length;
-                
-                // Play melody note
-                if (this.melody[melodyIndex]) {
-                    this.playNote(this.melody[melodyIndex], time - this.audioContext.currentTime);
-                }
-                
-                // Play bass note every 4 beats
-                if (beatNumber % 4 === 0 && this.bassLine[bassIndex]) {
-                    this.playNote({...this.bassLine[bassIndex], type: 'triangle'}, time - this.audioContext.currentTime);
-                }
-            }
-
-            nextNote() {
-                const secondsPerBeat = 60.0 / this.bpm;
-                this.nextNoteTime += 0.25 * secondsPerBeat; // 16th notes
-                this.current16thNote++;
-                
-                if (this.current16thNote === 64) { // Loop every 64 beats
-                    this.current16thNote = 0;
-                }
-            }
-
-            // Start the music
-            start() {
-                if (!this.audioContext) this.init();
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume();
-                }
-                
-                this.isPlaying = true;
-                this.current16thNote = 0;
-                this.nextNoteTime = this.audioContext.currentTime;
-                this.scheduler();
-                this.updateVisualizer();
-                
-                console.log('Cyberpunk Music: ACTIVATED');
-            }
-
-            // Stop the music
-            stop() {
-                this.isPlaying = false;
-                if (this.timerID) {
-                    clearTimeout(this.timerID);
-                }
-                console.log('Cyberpunk Music: DEACTIVATED');
-            }
-
-            // Update visualizer bars
-            updateVisualizer() {
-                if (!this.isPlaying) return;
-                
-                this.analyser.getByteFrequencyData(this.dataArray);
-                
-                const bars = this.visualizerBars;
-                for (let i = 0; i < bars.length; i++) {
-                    const value = this.dataArray[i * 4] / 255;
-                    const height = Math.max(5, value * 100) + '%';
-                    bars[i].style.height = height;
-                    bars[i].style.background = `hsl(${120 + value * 120}, 100%, 50%)`;
-                }
-                
-                requestAnimationFrame(() => this.updateVisualizer());
-            }
-
-            // Toggle music on/off
-            toggle() {
-                if (this.isPlaying) {
-                    this.stop();
-                } else {
-                    this.start();
-                }
-                return this.isPlaying;
-            }
+        function activateGame() {
+            console.log("🎮 Activating CyberPong...");
+            gameOverlay.style.display = 'flex';
+            resetGame();
         }
 
-        // ==================== MUSIC INTEGRATION ====================
-
-        let cyberAudio = null;
-
-        // Initialize audio on user interaction (browser requirement)
-        function initAudio() {
-            if (!cyberAudio) {
-                cyberAudio = new CyberpunkAudio();
-                
-                // Start with music on
-                setTimeout(() => {
-                    if (cyberAudio) {
-                        cyberAudio.start();
-                        updateMusicButton(true);
-                    }
-                }, 1000);
-            }
+        function deactivateGame() {
+            gameOverlay.style.display = 'none';
+            gameActive = false;
         }
 
-        // Toggle music
-        function toggleMusic() {
-            if (!cyberAudio) {
-                initAudio();
-                return;
-            }
+        function initGame() {
+            createBricks();
+            resetBall();
+            gameActive = true;
+            gameLoop();
+        }
+
+        function createBricks() {
+            bricks = [];
+            const colors = ['#00ff88', '#0066ff', '#aa00ff', '#ff00aa'];
             
-            const isPlaying = cyberAudio.toggle();
-            updateMusicButton(isPlaying);
-        }
-
-        function updateMusicButton(isPlaying) {
-            const button = document.getElementById('musicToggle');
-            button.textContent = isPlaying ? '🔊 MUSIC ON' : '🔇 MUSIC OFF';
-            button.style.borderColor = isPlaying ? '#00ff88' : '#ff0066';
-        }
-
-        // Game-specific audio effects
-        function playGameSound(type) {
-            if (!cyberAudio || !cyberAudio.audioContext) return;
-            
-            const now = cyberAudio.audioContext.currentTime;
-            
-            switch(type) {
-                case 'paddleHit':
-                    cyberAudio.createOscillator(523.25, 'square', 0.1);
-                    break;
-                case 'brickBreak':
-                    cyberAudio.createOscillator(1046.50, 'square', 0.2);
-                    cyberAudio.createOscillator(1318.51, 'square', 0.15);
-                    break;
-                case 'powerUp':
-                    cyberAudio.createOscillator(659.25, 'sawtooth', 0.5);
-                    cyberAudio.createOscillator(880.00, 'sawtooth', 0.4);
-                    break;
-                case 'gameOver':
-                    // Falling pitch effect
-                    const oscillator = cyberAudio.audioContext.createOscillator();
-                    oscillator.type = 'sawtooth';
-                    oscillator.frequency.setValueAtTime(523.25, now);
-                    oscillator.frequency.exponentialRampToValueAtTime(65.41, now + 1.5);
-                    
-                    const gainNode = cyberAudio.audioContext.createGain();
-                    gainNode.gain.setValueAtTime(0.5, now);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(cyberAudio.masterGain);
-                    
-                    oscillator.start(now);
-                    oscillator.stop(now + 1.5);
-                    break;
+            for (let row = 0; row < brickRows; row++) {
+                for (let col = 0; col < brickCols; col++) {
+                    bricks.push({
+                        x: col * (gameCanvas.width / brickCols),
+                        y: row * 30 + 50,
+                        width: gameCanvas.width / brickCols - 5,
+                        height: 25,
+                        color: colors[row],
+                        alive: true
+                    });
+                }
             }
         }
 
-        // Initialize audio on first user interaction
-        document.addEventListener('click', function initOnClick() {
-            initAudio();
-            document.removeEventListener('click', initOnClick);
-        });
+        function resetBall() {
+            ball.x = gameCanvas.width / 2;
+            ball.y = gameCanvas.height - 50;
+            ball.speedX = (Math.random() - 0.5) * 8;
+            ball.speedY = -5;
+            ball.trail = [];
+        }
 
-        document.addEventListener('keydown', function initOnKey() {
-            initAudio();
-            document.removeEventListener('keydown', initOnKey);
-        });
+        function resetGame() {
+            score = 0;
+            lives = 3;
+            level = 1;
+            powerUps = [];
+            updateUI();
+            createBricks();
+            resetBall();
+            if (!gameActive) {
+                gameActive = true;
+                gameLoop();
+            }
+        }
 
-        // ==================== INTEGRATE WITH GAME ====================
+        // ==================== GAME LOOP ====================
 
-        // Modify your existing game functions to include sound effects:
+        function gameLoop() {
+            if (!gameActive) return;
+
+            // Clear canvas with fade effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+            // Draw matrix background
+            drawMatrixBackground();
+
+            // Update game state
+            updateBall();
+            updatePaddle();
+            updatePowerUps();
+
+            // Draw everything
+            drawBricks();
+            drawPaddle();
+            drawBall();
+            drawPowerUps();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function drawMatrixBackground() {
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.05)';
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * gameCanvas.width;
+                const y = Math.random() * gameCanvas.height;
+                ctx.fillRect(x, y, 2, Math.random() * 30 + 10);
+            }
+        }
 
         function updateBall() {
-            // ... existing ball update code ...
-            
-            // Paddle collision sound
-            if (ball.y + ball.radius > gameCanvas.height - paddle.height &&
-                ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-                playGameSound('paddleHit');
-                // ... rest of paddle collision code
+            // Add ball to trail
+            ball.trail.push({x: ball.x, y: ball.y});
+            if (ball.trail.length > 8) ball.trail.shift();
+
+            // Move ball
+            ball.x += ball.speedX;
+            ball.y += ball.speedY;
+
+            // Wall collisions
+            if (ball.x + ball.radius > gameCanvas.width || ball.x - ball.radius < 0) {
+                ball.speedX = -ball.speedX;
+            }
+            if (ball.y - ball.radius < 0) {
+                ball.speedY = -ball.speedY;
             }
 
-            // Brick collision sound
+            // Paddle collision
+            if (ball.y + ball.radius > gameCanvas.height - paddle.height &&
+                ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+                
+                const hitPos = (ball.x - paddle.x) / paddle.width;
+                ball.speedX = (hitPos - 0.5) * 12;
+                ball.speedY = -Math.abs(ball.speedY);
+                score += 10;
+                updateUI();
+                
+                // Play sound if audio is available
+                if (window.playGameSound) playGameSound('paddleHit');
+            }
+
+            // Bottom boundary - lose life
+            if (ball.y > gameCanvas.height) {
+                lives--;
+                updateUI();
+                if (lives <= 0) {
+                    gameOver();
+                } else {
+                    resetBall();
+                }
+            }
+
+            // Brick collisions
             bricks.forEach(brick => {
                 if (brick.alive && 
                     ball.x + ball.radius > brick.x && 
@@ -486,26 +337,157 @@
                     ball.y + ball.radius > brick.y && 
                     ball.y - ball.radius < brick.y + brick.height) {
                     
-                    playGameSound('brickBreak');
-                    // ... rest of brick collision code
+                    brick.alive = false;
+                    ball.speedY = -ball.speedY;
+                    score += 100;
+                    updateUI();
+
+                    // Play sound if audio is available
+                    if (window.playGameSound) playGameSound('brickBreak');
+
+                    // Check for level completion
+                    if (bricks.every(b => !b.alive)) {
+                        levelUp();
+                    }
                 }
+            });
+        }
+
+        function updatePaddle() {
+            // Mouse control
+            gameCanvas.addEventListener('mousemove', (e) => {
+                const rect = gameCanvas.getBoundingClientRect();
+                paddle.x = e.clientX - rect.left - paddle.width / 2;
+                
+                // Keep paddle in bounds
+                if (paddle.x < 0) paddle.x = 0;
+                if (paddle.x + paddle.width > gameCanvas.width) {
+                    paddle.x = gameCanvas.width - paddle.width;
+                }
+            });
+        }
+
+        function updatePowerUps() {
+            // Power-up logic would go here
+        }
+
+        function drawBall() {
+            // Draw trail
+            ball.trail.forEach((pos, index) => {
+                const alpha = 0.3 * (index / ball.trail.length);
+                const radius = ball.radius * (index / ball.trail.length);
+                
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 102, 255, ${alpha})`;
+                ctx.fill();
             });
 
-            // Power-up collection sound
-            powerUps.forEach((powerUp, index) => {
-                if (powerUp.y + powerUp.height > gameCanvas.height - paddle.height &&
-                    powerUp.x > paddle.x && powerUp.x < paddle.x + paddle.width) {
+            // Draw main ball
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = ball.color;
+            ctx.fill();
+
+            // Glow effect
+            ctx.shadowColor = ball.color;
+            ctx.shadowBlur = 20;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function drawPaddle() {
+            ctx.fillStyle = paddle.color;
+            ctx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
+            
+            // Glow effect
+            ctx.shadowColor = paddle.color;
+            ctx.shadowBlur = 15;
+            ctx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
+            ctx.shadowBlur = 0;
+        }
+
+        function drawBricks() {
+            bricks.forEach(brick => {
+                if (brick.alive) {
+                    ctx.fillStyle = brick.color;
+                    ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
                     
-                    playGameSound('powerUp');
-                    // ... rest of power-up code
+                    // Glow effect
+                    ctx.shadowColor = brick.color;
+                    ctx.shadowBlur = 10;
+                    ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
+                    ctx.shadowBlur = 0;
                 }
             });
+        }
+
+        function drawPowerUps() {
+            // Power-up drawing logic would go here
+        }
+
+        function levelUp() {
+            level++;
+            updateUI();
+            createBricks();
+            resetBall();
+            // Increase difficulty
+            ball.speedX *= 1.2;
+            ball.speedY *= 1.2;
         }
 
         function gameOver() {
-            playGameSound('gameOver');
-            // ... rest of game over code
+            gameActive = false;
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+            ctx.font = '48px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('MATRIX COLLAPSED', gameCanvas.width/2, gameCanvas.height/2);
+            ctx.font = '24px Orbitron';
+            ctx.fillText(`FINAL SCORE: ${score}`, gameCanvas.width/2, gameCanvas.height/2 + 50);
+            
+            if (window.playGameSound) playGameSound('gameOver');
         }
+
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('level').textContent = level;
+        }
+
+        // Make canvas responsive
+        function resizeGameCanvas() {
+            const container = gameOverlay;
+            gameCanvas.width = Math.min(800, container.clientWidth - 40);
+            gameCanvas.height = Math.min(600, container.clientHeight - 100);
+            resetBall();
+        }
+
+        window.addEventListener('resize', resizeGameCanvas);
+
+        // Initialize game canvas when overlay is shown
+        gameOverlay.addEventListener('click', () => {
+            if (!gameActive) {
+                resizeGameCanvas();
+            }
+        });
+
+        // Start game when overlay is activated
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (gameOverlay.style.display === 'flex') {
+                        resizeGameCanvas();
+                    }
+                }
+            });
+        });
+        
+        observer.observe(gameOverlay, {
+            attributes: true,
+            attributeFilter: ['style']
+        });
+
+        console.log("🎮 CyberPong Game Loaded - Click the glowing button to play!");
     </script>
 </body>
 </html>
