@@ -1,10 +1,412 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiceBean369 - Where your dreams become code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: #00ff41;
+            background: #000;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+        }
+        
+        header {
+            background: rgba(0, 20, 0, 0.8);
+            color: #00ff41;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 2px solid #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .slogan {
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #00cc33;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 5px #00cc33;
+        }
+        
+        nav {
+            background: rgba(0, 30, 0, 0.9);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #00ff41;
+        }
+        
+        nav a {
+            color: #00ff41;
+            text-decoration: none;
+            margin: 0 2rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px #00ff41;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff41;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ff41;
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #00cc33;
+        }
+        
+        section {
+            margin: 3rem 0;
+            padding: 3rem;
+            background: rgba(0, 20, 0, 0.6);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        }
+        
+        section h2 {
+            color: #00ff41;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #00ff41;
+            padding-left: 1rem;
+            text-shadow: 0 0 5px #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        
+        section p {
+            color: #00cc33;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        
+        footer {
+            background: rgba(0, 20, 0, 0.9);
+            color: #00ff41;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 2px solid #00ff41;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: transparent;
+            color: #00ff41;
+            padding: 15px 40px;
+            text-decoration: none;
+            border: 2px solid #00ff41;
+            border-radius: 0;
+            font-weight: bold;
+            margin-top: 2rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .cta-button:hover {
+            background: #00ff41;
+            color: #000;
+            box-shadow: 0 0 20px #00ff41;
+            text-shadow: none;
+        }
+        
+        .matrix-char {
+            position: absolute;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #00ff41;
+            z-index: 0;
+        }
+        
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+            }
+            to {
+                text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            }
+        }
+        
+        .digital-rain {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, #00ff41, transparent);
+            animation: rainFall linear infinite;
+        }
+        
+        @keyframes rainFall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to ricebean369.com!</h1>
-    <p>My website is coming soon...</p>
+    <canvas id="matrixCanvas"></canvas>
+    
+    <div class="content">
+        <header>
+            <div class="logo glow">RiceBean369</div>
+            <div class="slogan">Where your dreams become code</div>
+        </header>
+        
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        
+        <div class="container">
+            <div class="hero">
+                <h2 class="glow">DIGITAL DREAMS AWAIT</h2>
+                <p>Welcome to the source code of imagination. Where every pixel tells a story and every line of code brings dreams closer to reality.</p>
+                <a href="#projects" class="cta-button">Access the Matrix</a>
+            </div>
+            
+            <section id="home">
+                <h2>System Online</h2>
+                <p>> Initializing dream sequence...</p>
+                <p>> Loading creative modules...</p>
+                <p>> Establishing connection between imagination and implementation...</p>
+                <p>> Welcome to the digital realm where ideas compile into reality.</p>
+            </section>
+            
+            <section id="about">
+                <h2>About the Architect</h2>
+                <p>> Name: RiceBean369</p>
+                <p>> Specialty: Dream Compilation & Reality Rendering</p>
+                <p>> Mission: To bridge the gap between abstract concepts and functional digital experiences.</p>
+                <p>> Current Status: Processing infinite possibilities...</p>
+            </section>
+            
+            <section id="projects">
+                <h2>Active Projects</h2>
+                <p>> Project Matrix: ONLINE</p>
+                <p>> Dream Compiler: INITIALIZING</p>
+                <p>> Reality Renderer: LOADING</p>
+                <p>> Innovation Engine: OPTIMIZING</p>
+                <p>> More projects compiling in the background...</p>
+            </section>
+            
+            <section id="contact">
+                <h2>Establish Connection</h2>
+                <p>> Transmission Protocol: READY</p>
+                <p>> Communication Channel: OPEN</p>
+                <p>> Destination: hello@ricebean369.com</p>
+                <p>> Ready to receive your digital dreams...</p>
+            </section>
+        </div>
+        
+        <footer>
+            <p>&copy; 2024 RiceBean369 - System: ONLINE | Dreams Compiled: ∞ | Reality Status: RENDERING</p>
+        </footer>
+    </div>
+
+    <script>
+        // Matrix Digital Rain Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Matrix characters
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const chars = matrixChars.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+        }
+        
+        function drawMatrix() {
+            // Semi-transparent black to create trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                
+                // Draw character
+                ctx.fillText(text, x, y);
+                
+                // Reset drop to top when it reaches bottom
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Move drop down
+                drops[i]++;
+            }
+        }
+        
+        // Stardust particles
+        const particles = [];
+        
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.color = `rgba(0, 255, 65, ${this.alpha})`;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+        
+        function drawStardust() {
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+        }
+        
+        function animate() {
+            drawMatrix();
+            drawStardust();
+            requestAnimationFrame(animate);
+        }
+        
+        // Start animation
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Smooth scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
