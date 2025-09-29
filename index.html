@@ -36,78 +36,30 @@
             min-height: 100vh;
         }
         
-        /* 50s Cartoon Header */
-        .cartoon-header {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
-            padding: 3rem 1rem;
+        header {
+            background: rgba(0, 20, 0, 0.8);
+            color: #00ff41;
+            padding: 2rem 1rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            border-bottom: 2px solid #00ff41;
+            text-shadow: 0 0 10px #00ff41;
         }
         
-        .logo-brawl {
-            font-size: 4rem;
-            font-weight: 900;
-            font-family: 'Comic Sans MS', cursive;
-            color: #000;
-            text-shadow: 
-                3px 3px 0 #fff,
-                5px 5px 0 #000;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .letter {
-            display: inline-block;
-            position: relative;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .letter:hover {
-            animation: wobble 0.5s ease infinite;
-        }
-        
-        @keyframes wobble {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(5deg) scale(1.2); }
-            75% { transform: rotate(-5deg) scale(1.2); }
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
         }
         
         .slogan {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-style: italic;
-            color: #000;
-            margin-top: 1rem;
-            font-family: 'Comic Sans MS', cursive;
-            text-shadow: 2px 2px 0 #fff;
-            position: relative;
+            color: #00cc33;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 5px #00cc33;
         }
         
-        /* Cartoon elements */
-        .cartoon-cloud {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            filter: drop-shadow(2px 2px 0 black);
-        }
-        
-        .punch-effect {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .fight-zone {
-            position: relative;
-            height: 100px;
-            margin: 2rem 0;
-            border: 3px dashed #000;
-            background: rgba(255,255,255,0.1);
-        }
-        
-        /* Rest of your existing styles remain the same */
         nav {
             background: rgba(0, 30, 0, 0.9);
             padding: 1rem;
@@ -122,6 +74,27 @@
             font-weight: bold;
             transition: all 0.3s;
             text-shadow: 0 0 5px #00ff41;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff41;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ff41;
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
         }
         
         .container {
@@ -130,13 +103,55 @@
             padding: 2rem;
         }
         
+        .hero {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #00cc33;
+        }
+        
         section {
             margin: 3rem 0;
-            padding: 2.5rem;
+            padding: 3rem;
             background: rgba(0, 20, 0, 0.6);
             border: 1px solid #00ff41;
             border-radius: 5px;
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        }
+        
+        section h2 {
+            color: #00ff41;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #00ff41;
+            padding-left: 1rem;
+            text-shadow: 0 0 5px #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        
+        section p {
+            color: #00cc33;
+            margin-bottom: 1rem;
+            line-height: 1.8;
         }
         
         footer {
@@ -146,6 +161,66 @@
             padding: 2rem;
             margin-top: 4rem;
             border-top: 2px solid #00ff41;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: transparent;
+            color: #00ff41;
+            padding: 15px 40px;
+            text-decoration: none;
+            border: 2px solid #00ff41;
+            border-radius: 0;
+            font-weight: bold;
+            margin-top: 2rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .cta-button:hover {
+            background: #00ff41;
+            color: #000;
+            box-shadow: 0 0 20px #00ff41;
+            text-shadow: none;
+        }
+        
+        .matrix-char {
+            position: absolute;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #00ff41;
+            z-index: 0;
+        }
+        
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+            }
+            to {
+                text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            }
+        }
+        
+        .digital-rain {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, #00ff41, transparent);
+            animation: rainFall linear infinite;
+        }
+        
+        @keyframes rainFall {
+            to {
+                transform: translateY(100vh);
+            }
         }
     </style>
 </head>
@@ -153,38 +228,9 @@
     <canvas id="matrixCanvas"></canvas>
     
     <div class="content">
-        <!-- 50s Cartoon Brawl Header -->
-        <header class="cartoon-header">
-            <div class="logo-brawl" id="animatedLogo">
-                <span class="letter" data-letter="R">R</span>
-                <span class="letter" data-letter="i">i</span>
-                <span class="letter" data-letter="c">c</span>
-                <span class="letter" data-letter="e">e</span>
-                <span class="letter" data-letter="B">B</span>
-                <span class="letter" data-letter="e">e</span>
-                <span class="letter" data-letter="a">a</span>
-                <span class="letter" data-letter="n">n</span>
-                <span class="letter" data-letter="3">3</span>
-                <span class="letter" data-letter="6">6</span>
-                <span class="letter" data-letter="9">9</span>
-            </div>
-            <div class="slogan" id="animatedSlogan">
-                Where your dreams become code!
-            </div>
-            <div class="fight-zone" id="fightZone"></div>
-            
-            <button id="startBrawl" style="
-                background: #ff6b6b;
-                color: white;
-                border: 3px solid #000;
-                padding: 15px 30px;
-                font-size: 1.2rem;
-                font-family: 'Comic Sans MS', cursive;
-                cursor: pointer;
-                text-shadow: 2px 2px 0 #000;
-                box-shadow: 5px 5px 0 #000;
-                margin-top: 1rem;
-            ">START LETTER BRAWL! 🤜💥🤛</button>
+        <header>
+            <div class="logo glow">RiceBean369</div>
+            <div class="slogan">Where your dreams become code</div>
         </header>
         
         <nav>
@@ -195,38 +241,78 @@
         </nav>
         
         <div class="container">
-            <!-- Your existing sections here -->
+            <div class="hero">
+                <h2 class="glow">DIGITAL DREAMS AWAIT</h2>
+                <p>Welcome to the source code of imagination. Where every pixel tells a story and every line of code brings dreams closer to reality.</p>
+                <a href="#projects" class="cta-button">Access the Matrix</a>
+            </div>
+            
             <section id="home">
-                <h2>Welcome to the Cartoon Code Zone!</h2>
-                <p>Watch as letters come alive and have epic cartoon battles!</p>
+                <h2>System Online</h2>
+                <p>> Initializing dream sequence...</p>
+                <p>> Loading creative modules...</p>
+                <p>> Establishing connection between imagination and implementation...</p>
+                <p>> Welcome to the digital realm where ideas compile into reality.</p>
+            </section>
+            
+            <section id="about">
+                <h2>About the Architect</h2>
+                <p>> Name: RiceBean369</p>
+                <p>> Specialty: Dream Compilation & Reality Rendering</p>
+                <p>> Mission: To bridge the gap between abstract concepts and functional digital experiences.</p>
+                <p>> Current Status: Processing infinite possibilities...</p>
+            </section>
+            
+            <section id="projects">
+                <h2>Active Projects</h2>
+                <p>> Project Matrix: ONLINE</p>
+                <p>> Dream Compiler: INITIALIZING</p>
+                <p>> Reality Renderer: LOADING</p>
+                <p>> Innovation Engine: OPTIMIZING</p>
+                <p>> More projects compiling in the background...</p>
+            </section>
+            
+            <section id="contact">
+                <h2>Establish Connection</h2>
+                <p>> Transmission Protocol: READY</p>
+                <p>> Communication Channel: OPEN</p>
+                <p>> Destination: hello@ricebean369.com</p>
+                <p>> Ready to receive your digital dreams...</p>
             </section>
         </div>
         
         <footer>
-            <p>&copy; 2024 RiceBean369 - Now with 100% more cartoon violence!</p>
+            <p>&copy; 2024 RiceBean369 - System: ONLINE | Dreams Compiled: ∞ | Reality Status: RENDERING</p>
         </footer>
     </div>
 
     <script>
-        // Matrix background (your existing code)
+        // Matrix Digital Rain Effect
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         
-        const matrixChars = '01';
+        // Matrix characters
+        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
         const chars = matrixChars.split('');
+        
         const fontSize = 14;
         const columns = canvas.width / fontSize;
         const drops = [];
         
+        // Initialize drops
         for (let i = 0; i < columns; i++) {
             drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
         }
         
         function drawMatrix() {
+            // Semi-transparent black to create trail effect
             ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
             ctx.fillStyle = '#00ff41';
             ctx.font = fontSize + 'px monospace';
             
@@ -234,186 +320,93 @@
                 const text = chars[Math.floor(Math.random() * chars.length)];
                 const x = i * fontSize;
                 const y = drops[i] * fontSize;
+                
+                // Draw character
                 ctx.fillText(text, x, y);
+                
+                // Reset drop to top when it reaches bottom
                 if (y > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
+                
+                // Move drop down
                 drops[i]++;
             }
         }
         
-        function animateMatrix() {
+        // Stardust particles
+        const particles = [];
+        
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.color = `rgba(0, 255, 65, ${this.alpha})`;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+        
+        function drawStardust() {
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+        }
+        
+        function animate() {
             drawMatrix();
-            requestAnimationFrame(animateMatrix);
-        }
-        animateMatrix();
-
-        // CRAZY 50s CARTOON BRAWL LOGIC
-        const letters = document.querySelectorAll('.letter');
-        const fightZone = document.getElementById('fightZone');
-        const startBrawl = document.getElementById('startBrawl');
-        
-        let brawlActive = false;
-        
-        // Cartoon sound effects (using Web Audio API)
-        function playSound(frequency, duration) {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = frequency;
-            oscillator.type = 'square';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + duration);
+            drawStardust();
+            requestAnimationFrame(animate);
         }
         
-        // Create punch effect
-        function createPunchEffect(x, y) {
-            const punch = document.createElement('div');
-            punch.className = 'punch-effect';
-            punch.textContent = '💥';
-            punch.style.left = x + 'px';
-            punch.style.top = y + 'px';
-            document.querySelector('.cartoon-header').appendChild(punch);
-            
-            // Animate punch
-            punch.animate([
-                { transform: 'scale(0) rotate(0deg)', opacity: 1 },
-                { transform: 'scale(3) rotate(360deg)', opacity: 0 }
-            ], {
-                duration: 500,
-                easing: 'ease-out'
-            });
-            
-            setTimeout(() => punch.remove(), 500);
-        }
+        // Start animation
+        animate();
         
-        // Make letters fight!
-        function startLetterBrawl() {
-            if (brawlActive) return;
-            brawlActive = true;
-            
-            letters.forEach((letter, index) => {
-                // Reset positions first
-                letter.style.position = 'static';
-                letter.style.transform = 'none';
-                
-                setTimeout(() => {
-                    // Random fighting animation
-                    const randomX = Math.random() * 300 - 150;
-                    const randomY = Math.random() * 100 - 50;
-                    
-                    letter.animate([
-                        { transform: 'translate(0, 0) rotate(0deg)' },
-                        { transform: `translate(${randomX}px, ${randomY}px) rotate(${Math.random() * 360}deg)` },
-                        { transform: 'translate(0, 0) rotate(0deg)' }
-                    ], {
-                        duration: 1000,
-                        iterations: 2,
-                        easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-                    });
-                    
-                    // Play cartoon sounds
-                    playSound(100 + Math.random() * 800, 0.1);
-                    
-                    // Create punch effects
-                    const rect = letter.getBoundingClientRect();
-                    createPunchEffect(rect.left + rect.width/2, rect.top + rect.height/2);
-                    
-                }, index * 200);
-            });
-            
-            // Animate slogan too!
-            const slogan = document.getElementById('animatedSlogan');
-            slogan.animate([
-                { transform: 'scale(1)' },
-                { transform: 'scale(1.2)' },
-                { transform: 'scale(1)' }
-            ], {
-                duration: 1000,
-                easing: 'ease-in-out'
-            });
-            
-            // Reset after brawl
-            setTimeout(() => {
-                brawlActive = false;
-            }, 3000);
-        }
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
         
-        // Individual letter interactions
-        letters.forEach(letter => {
-            letter.addEventListener('click', function(e) {
-                if (brawlActive) return;
-                
-                // Make this letter do a special attack
-                this.animate([
-                    { transform: 'scale(1) rotate(0deg)', color: '#000' },
-                    { transform: 'scale(1.5) rotate(360deg)', color: '#ff0000' },
-                    { transform: 'scale(1) rotate(720deg)', color: '#000' }
-                ], {
-                    duration: 800,
-                    easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-                });
-                
-                playSound(500, 0.3);
-                createPunchEffect(e.clientX, e.clientY);
-                
-                // Shake nearby letters
-                letters.forEach(otherLetter => {
-                    if (otherLetter !== this && Math.random() > 0.5) {
-                        otherLetter.animate([
-                            { transform: 'translateX(0px)' },
-                            { transform: 'translateX(10px)' },
-                            { transform: 'translateX(-10px)' },
-                            { transform: 'translateX(0px)' }
-                        ], {
-                            duration: 200,
-                            iterations: 2
-                        });
-                    }
+        // Smooth scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
                 });
             });
         });
-        
-        // Start brawl when button clicked
-        startBrawl.addEventListener('click', startLetterBrawl);
-        
-        // Auto-brawl every 10 seconds
-        setInterval(() => {
-            if (!brawlActive && Math.random() > 0.7) {
-                startLetterBrawl();
-            }
-        }, 10000);
-        
-        // Add some cartoon clouds
-        for (let i = 0; i < 5; i++) {
-            const cloud = document.createElement('div');
-            cloud.className = 'cartoon-cloud';
-            cloud.style.width = (50 + Math.random() * 100) + 'px';
-            cloud.style.height = (30 + Math.random() * 50) + 'px';
-            cloud.style.left = Math.random() * 100 + 'vw';
-            cloud.style.top = (20 + Math.random() * 30) + 'vh';
-            cloud.style.opacity = '0.7';
-            document.querySelector('.cartoon-header').appendChild(cloud);
-            
-            // Animate clouds
-            cloud.animate([
-                { transform: 'translateX(0px)' },
-                { transform: 'translateX(100px)' }
-            ], {
-                duration: 4000 + Math.random() * 6000,
-                iterations: Infinity,
-                direction: 'alternate',
-                easing: 'ease-in-out'
-            });
-        }
     </script>
 </body>
 </html>
