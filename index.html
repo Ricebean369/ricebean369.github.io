@@ -3,409 +3,556 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RiceBean369 - Where your dreams become code</title>
+    <title>RiceBean369 - Quantum Digital Dreamscape</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: 'Courier New', monospace;
-            line-height: 1.6;
-            color: #00ff41;
-            background: #000;
-            overflow-x: hidden;
-            position: relative;
+
+        :root {
+            --neon-green: #00ff88;
+            --neon-blue: #0066ff;
+            --neon-purple: #aa00ff;
+            --neon-pink: #ff00aa;
+            --matrix-glow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
         }
-        
-        #matrixCanvas {
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Quantum Background */
+        #quantumCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -3;
         }
-        
-        .content {
+
+        /* Holographic Interface */
+        .hologram {
             position: relative;
-            z-index: 1;
-            background: rgba(0, 0, 0, 0.7);
-            min-height: 100vh;
+            background: rgba(0, 20, 40, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            box-shadow: var(--matrix-glow),
+                        inset 0 0 50px rgba(0, 255, 136, 0.1);
         }
-        
-        header {
-            background: rgba(0, 20, 0, 0.8);
-            color: #00ff41;
-            padding: 2rem 1rem;
-            text-align: center;
-            border-bottom: 2px solid #00ff41;
-            text-shadow: 0 0 10px #00ff41;
-        }
-        
-        .logo {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .slogan {
-            font-size: 1.4rem;
-            font-style: italic;
-            color: #00cc33;
-            margin-top: 0.5rem;
-            text-shadow: 0 0 5px #00cc33;
-        }
-        
-        nav {
-            background: rgba(0, 30, 0, 0.9);
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid #00ff41;
-        }
-        
-        nav a {
-            color: #00ff41;
-            text-decoration: none;
-            margin: 0 2rem;
-            font-weight: bold;
-            transition: all 0.3s;
-            text-shadow: 0 0 5px #00ff41;
-            position: relative;
-        }
-        
-        nav a:hover {
-            color: #ffffff;
-            text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff41;
-        }
-        
-        nav a::after {
+
+        .hologram::before {
             content: '';
             position: absolute;
-            bottom: -5px;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            border-radius: 17px;
+            z-index: -1;
+            animation: hologramBorder 3s linear infinite;
+        }
+
+        @keyframes hologramBorder {
+            0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
+            50% { opacity: 0.7; }
+        }
+
+        /* Main Layout */
+        .cyber-container {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Neural Network Background */
+        .neural-network {
+            position: fixed;
+            top: 0;
             left: 0;
-            width: 0;
-            height: 2px;
-            background: #00ff41;
-            transition: width 0.3s;
-        }
-        
-        nav a:hover::after {
             width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.3;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .hero {
+
+        /* Header with 3D Effect */
+        .cyber-header {
+            position: relative;
+            padding: 4rem 2rem;
             text-align: center;
-            padding: 6rem 2rem;
-            color: #00ff41;
-            text-shadow: 0 0 10px #00ff41;
+            background: linear-gradient(180deg, rgba(0,255,136,0.1) 0%, transparent 100%);
         }
-        
-        .hero h2 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .hero p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            color: #00cc33;
-        }
-        
-        section {
-            margin: 3rem 0;
-            padding: 3rem;
-            background: rgba(0, 20, 0, 0.6);
-            border: 1px solid #00ff41;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-            backdrop-filter: blur(5px);
-            transition: transform 0.3s;
-        }
-        
-        section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
-        }
-        
-        section h2 {
-            color: #00ff41;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #00ff41;
-            padding-left: 1rem;
-            text-shadow: 0 0 5px #00ff41;
-            font-family: 'Courier New', monospace;
-        }
-        
-        section p {
-            color: #00cc33;
+
+        .quantum-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            animation: titleGlitch 5s infinite;
             margin-bottom: 1rem;
-            line-height: 1.8;
         }
-        
-        footer {
-            background: rgba(0, 20, 0, 0.9);
-            color: #00ff41;
-            text-align: center;
+
+        @keyframes titleGlitch {
+            0%, 100% { transform: translateX(0) skewX(0); }
+            95% { transform: translateX(0) skewX(0); }
+            96% { transform: translateX(-10px) skewX(-5deg); }
+            97% { transform: translateX(10px) skewX(5deg); }
+            98% { transform: translateX(-5px) skewX(-2deg); }
+        }
+
+        .slogan-3d {
+            font-size: 1.8rem;
+            color: var(--neon-green);
+            text-shadow: var(--matrix-glow);
+            transform: perspective(500px) rotateX(10deg);
+            animation: sloganFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes sloganFloat {
+            0%, 100% { transform: perspective(500px) rotateX(10deg) translateY(0); }
+            50% { transform: perspective(500px) rotateX(10deg) translateY(-10px); }
+        }
+
+        /* Quantum Navigation */
+        .quantum-nav {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
             padding: 2rem;
-            margin-top: 4rem;
-            border-top: 2px solid #00ff41;
-            text-shadow: 0 0 5px #00ff41;
+            background: rgba(0, 10, 20, 0.8);
+            backdrop-filter: blur(15px);
         }
-        
-        .cta-button {
-            display: inline-block;
-            background: transparent;
-            color: #00ff41;
-            padding: 15px 40px;
+
+        .nav-portal {
+            position: relative;
+            padding: 1rem 2rem;
+            color: var(--neon-green);
             text-decoration: none;
-            border: 2px solid #00ff41;
-            border-radius: 0;
-            font-weight: bold;
-            margin-top: 2rem;
-            transition: all 0.3s;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, transparent 50%, rgba(0, 255, 136, 0.1) 50%);
+            background-size: 300% 300%;
+            background-position: 100% 100%;
+        }
+
+        .nav-portal:hover {
+            background-position: 0% 0%;
+            border: 2px solid var(--neon-green);
+            box-shadow: var(--matrix-glow);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        /* Main Content Grid */
+        .cyber-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            padding: 4rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Holographic Cards */
+        .holo-card {
+            position: relative;
+            padding: 3rem;
+            min-height: 400px;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden;
+        }
+
+        .holo-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3),
+                        inset 0 0 100px rgba(0, 255, 136, 0.1);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cyber-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Quantum Buttons */
+        .quantum-btn {
+            position: relative;
+            padding: 1.5rem 3rem;
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 5px #00ff41;
-            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
         }
-        
-        .cta-button:hover {
-            background: #00ff41;
-            color: #000;
-            box-shadow: 0 0 20px #00ff41;
-            text-shadow: none;
-        }
-        
-        .matrix-char {
+
+        .quantum-btn::before {
+            content: '';
             position: absolute;
-            color: #00ff41;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 5px #00ff41;
-            z-index: 0;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
+            transition: left 0.5s;
         }
-        
-        .glow {
-            animation: glow 2s ease-in-out infinite alternate;
+
+        .quantum-btn:hover::before {
+            left: 100%;
         }
-        
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
-            }
-            to {
-                text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
-            }
+
+        .quantum-btn:hover {
+            background: rgba(0, 255, 136, 0.1);
+            box-shadow: var(--matrix-glow);
+            transform: translateY(-3px);
         }
-        
-        .digital-rain {
+
+        /* Animated Background Elements */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
             position: absolute;
-            width: 2px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Audio Visualizer */
+        #visualizer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
             height: 100px;
-            background: linear-gradient(to bottom, transparent, #00ff41, transparent);
-            animation: rainFall linear infinite;
+            z-index: -1;
+            opacity: 0.3;
         }
-        
-        @keyframes rainFall {
-            to {
-                transform: translateY(100vh);
-            }
+
+        /* Terminal Effect */
+        .terminal-line {
+            opacity: 0;
+            animation: typeWriter 2s forwards;
+        }
+
+        @keyframes typeWriter {
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .quantum-title { font-size: 3rem; }
+            .cyber-grid { grid-template-columns: 1fr; padding: 2rem; }
+            .quantum-nav { flex-direction: column; gap: 1rem; }
         }
     </style>
 </head>
 <body>
-    <canvas id="matrixCanvas"></canvas>
-    
-    <div class="content">
-        <header>
-            <div class="logo glow">RiceBean369</div>
-            <div class="slogan">Where your dreams become code</div>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Quantum Background Canvas -->
+    <canvas id="quantumCanvas"></canvas>
+
+    <!-- Neural Network -->
+    <canvas class="neural-network"></canvas>
+
+    <!-- Floating Shapes -->
+    <div class="floating-shapes" id="floatingShapes"></div>
+
+    <!-- Audio Visualizer -->
+    <canvas id="visualizer"></canvas>
+
+    <div class="cyber-container">
+        <!-- Header -->
+        <header class="cyber-header">
+            <h1 class="quantum-title">RICEBEAN369</h1>
+            <div class="slogan-3d">WHERE QUANTUM DREAMS BECOME DIGITAL REALITY</div>
         </header>
-        
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+
+        <!-- Navigation -->
+        <nav class="quantum-nav">
+            <a href="#home" class="nav-portal">Quantum Home</a>
+            <a href="#about" class="nav-portal">Neural Core</a>
+            <a href="#projects" class="nav-portal">Digital Genesis</a>
+            <a href="#contact" class="nav-portal">Transmission</a>
         </nav>
-        
-        <div class="container">
-            <div class="hero">
-                <h2 class="glow">DIGITAL DREAMS AWAIT</h2>
-                <p>Welcome to the source code of imagination. Where every pixel tells a story and every line of code brings dreams closer to reality.</p>
-                <a href="#projects" class="cta-button">Access the Matrix</a>
-            </div>
-            
-            <section id="home">
-                <h2>System Online</h2>
-                <p>> Initializing dream sequence...</p>
-                <p>> Loading creative modules...</p>
-                <p>> Establishing connection between imagination and implementation...</p>
-                <p>> Welcome to the digital realm where ideas compile into reality.</p>
+
+        <!-- Main Content -->
+        <main class="cyber-grid">
+            <!-- Home Section -->
+            <section id="home" class="holo-card hologram">
+                <h2 class="card-title">SYSTEM BOOT</h2>
+                <p class="cyber-text terminal-line" style="animation-delay: 0.5s;">> Initializing quantum dream processor...</p>
+                <p class="cyber-text terminal-line" style="animation-delay: 1s;">> Loading neural interface protocols...</p>
+                <p class="cyber-text terminal-line" style="animation-delay: 1.5s;">> Establishing connection to digital consciousness...</p>
+                <p class="cyber-text terminal-line" style="animation-delay: 2s;">> Welcome to the next dimension of web development.</p>
+                <button class="quantum-btn">ACTIVATE QUANTUM MODE</button>
             </section>
-            
-            <section id="about">
-                <h2>About the Architect</h2>
-                <p>> Name: RiceBean369</p>
-                <p>> Specialty: Dream Compilation & Reality Rendering</p>
-                <p>> Mission: To bridge the gap between abstract concepts and functional digital experiences.</p>
-                <p>> Current Status: Processing infinite possibilities...</p>
+
+            <!-- About Section -->
+            <section id="about" class="holo-card hologram">
+                <h2 class="card-title">NEURAL CORE</h2>
+                <p class="cyber-text">> Quantum Developer Matrix: ONLINE</p>
+                <p class="cyber-text">> Reality Distortion Field: ACTIVE</p>
+                <p class="cyber-text">> Dream Compilation Engine: OPTIMIZED</p>
+                <p class="cyber-text">> Specializing in bending reality through code and creating digital experiences that transcend imagination.</p>
+                <div class="skill-bars">
+                    <!-- Animated skill bars would go here -->
+                </div>
             </section>
-            
-            <section id="projects">
-                <h2>Active Projects</h2>
-                <p>> Project Matrix: ONLINE</p>
-                <p>> Dream Compiler: INITIALIZING</p>
-                <p>> Reality Renderer: LOADING</p>
-                <p>> Innovation Engine: OPTIMIZING</p>
-                <p>> More projects compiling in the background...</p>
+
+            <!-- Projects Section -->
+            <section id="projects" class="holo-card hologram">
+                <h2 class="card-title">DIGITAL GENESIS</h2>
+                <p class="cyber-text">> Project T-800: DREAM COMPILER</p>
+                <p class="cyber-text">> Status: QUANTUM ENTANGLED</p>
+                <p class="cyber-text">> Project M-400: REALITY ENGINE</p>
+                <p class="cyber-text">> Status: DIMENSION HOPPING</p>
+                <p class="cyber-text">> Project X-900: NEURAL INTERFACE</p>
+                <p class="cyber-text">> Status: CONSCIOUSNESS SYNCHRONIZED</p>
             </section>
-            
-            <section id="contact">
-                <h2>Establish Connection</h2>
-                <p>> Transmission Protocol: READY</p>
-                <p>> Communication Channel: OPEN</p>
-                <p>> Destination: hello@ricebean369.com</p>
-                <p>> Ready to receive your digital dreams...</p>
+
+            <!-- Contact Section -->
+            <section id="contact" class="holo-card hologram">
+                <h2 class="card-title">QUANTUM TRANSMISSION</h2>
+                <p class="cyber-text">> Transmission Protocol: QUANTUM ENTANGLED</p>
+                <p class="cyber-text">> Bandwidth: INFINITE</p>
+                <p class="cyber-text">> Destination: hello@ricebean369.com</p>
+                <p class="cyber-text">> Ready to receive your quantum dreams...</p>
+                <button class="quantum-btn">INITIATE TRANSMISSION</button>
             </section>
-        </div>
-        
-        <footer>
-            <p>&copy; 2024 RiceBean369 - System: ONLINE | Dreams Compiled: ∞ | Reality Status: RENDERING</p>
-        </footer>
+        </main>
     </div>
 
     <script>
-        // Matrix Digital Rain Effect
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Set canvas size
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        // Matrix characters
-        const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-        const chars = matrixChars.split('');
-        
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        
-        // Initialize drops
-        for (let i = 0; i < columns; i++) {
-            drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
-        }
-        
-        function drawMatrix() {
-            // Semi-transparent black to create trail effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Quantum Canvas Background
+        const quantumCanvas = document.getElementById('quantumCanvas');
+        const qtx = quantumCanvas.getContext('2d');
+        quantumCanvas.width = window.innerWidth;
+        quantumCanvas.height = window.innerHeight;
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
             
-            ctx.fillStyle = '#00ff41';
-            ctx.font = fontSize + 'px monospace';
-            
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                const x = i * fontSize;
-                const y = drops[i] * fontSize;
-                
-                // Draw character
-                ctx.fillText(text, x, y);
-                
-                // Reset drop to top when it reaches bottom
-                if (y > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                
-                // Move drop down
-                drops[i]++;
-            }
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Floating Shapes
+        const shapesContainer = document.getElementById('floatingShapes');
+        for (let i = 0; i < 50; i++) {
+            const shape = document.createElement('div');
+            shape.className = 'shape';
+            shape.style.width = Math.random() * 100 + 50 + 'px';
+            shape.style.height = Math.random() * 100 + 50 + 'px';
+            shape.style.left = Math.random() * 100 + 'vw';
+            shape.style.animationDelay = Math.random() * 20 + 's';
+            shape.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            shapesContainer.appendChild(shape);
         }
-        
-        // Stardust particles
-        const particles = [];
-        
-        class Particle {
+
+        // Quantum Particle System
+        class QuantumParticle {
             constructor() {
                 this.reset();
             }
-            
+
             reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = (Math.random() - 0.5) * 2;
-                this.size = Math.random() * 2 + 1;
+                this.x = Math.random() * quantumCanvas.width;
+                this.y = Math.random() * quantumCanvas.height;
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = (Math.random() - 0.5) * 4;
+                this.size = Math.random() * 3 + 1;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
                 this.alpha = Math.random() * 0.5 + 0.3;
-                this.color = `rgba(0, 255, 65, ${this.alpha})`;
+                this.connections = [];
             }
-            
+
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                    this.reset();
+
+                if (this.x < 0 || this.x > quantumCanvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > quantumCanvas.height) this.vy *= -1;
+
+                this.alpha = 0.3 + Math.sin(Date.now() * 0.001 + this.x * 0.01) * 0.2;
+            }
+
+            draw() {
+                qtx.beginPath();
+                qtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                qtx.fillStyle = this.color;
+                qtx.globalAlpha = this.alpha;
+                qtx.fill();
+            }
+        }
+
+        // Neural Network
+        const neuralCanvas = document.querySelector('.neural-network');
+        const ntx = neuralCanvas.getContext('2d');
+        neuralCanvas.width = window.innerWidth;
+        neuralCanvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 100; i++) {
+            particles.push(new QuantumParticle());
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ntx.beginPath();
+                        ntx.strokeStyle = `rgba(0, 255, 136, ${0.2 * (1 - distance/150)})`;
+                        ntx.lineWidth = 0.5;
+                        ntx.moveTo(particles[i].x, particles[i].y);
+                        ntx.lineTo(particles[j].x, particles[j].y);
+                        ntx.stroke();
+                    }
                 }
             }
-            
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
         }
-        
-        // Create particles
-        for (let i = 0; i < 100; i++) {
-            particles.push(new Particle());
-        }
-        
-        function drawStardust() {
+
+        function animateQuantum() {
+            qtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            qtx.fillRect(0, 0, quantumCanvas.width, quantumCanvas.height);
+
+            ntx.clearRect(0, 0, neuralCanvas.width, neuralCanvas.height);
+
             particles.forEach(particle => {
                 particle.update();
                 particle.draw();
             });
+
+            drawConnections();
+
+            requestAnimationFrame(animateQuantum);
         }
-        
-        function animate() {
-            drawMatrix();
-            drawStardust();
-            requestAnimationFrame(animate);
+
+        animateQuantum();
+
+        // Audio Visualizer
+        const visualizer = document.getElementById('visualizer');
+        const vtx = visualizer.getContext('2d');
+        visualizer.width = window.innerWidth;
+        visualizer.height = 100;
+
+        function createVisualizer() {
+            const gradient = vtx.createLinearGradient(0, 0, visualizer.width, 0);
+            gradient.addColorStop(0, '#00ff88');
+            gradient.addColorStop(0.5, '#0066ff');
+            gradient.addColorStop(1, '#aa00ff');
+
+            for (let i = 0; i < visualizer.width; i += 3) {
+                const height = Math.random() * 50 + 10;
+                vtx.fillStyle = gradient;
+                vtx.fillRect(i, visualizer.height - height, 2, height);
+            }
         }
-        
-        // Start animation
-        animate();
-        
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+
+        setInterval(createVisualizer, 100);
+
+        // Window Resize
+        window.addEventListener('resize', () => {
+            quantumCanvas.width = window.innerWidth;
+            quantumCanvas.height = window.innerHeight;
+            neuralCanvas.width = window.innerWidth;
+            neuralCanvas.height = window.innerHeight;
+            visualizer.width = window.innerWidth;
         });
-        
-        // Smooth scrolling
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('nav a').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                });
+
+        // Interactive Effects
+        document.querySelectorAll('.quantum-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.animation = 'quantumPulse 0.5s';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
             });
+        });
+
+        // Terminal Typing Effect
+        const terminalLines = document.querySelectorAll('.terminal-line');
+        terminalLines.forEach((line, index) => {
+            line.style.animationDelay = `${index * 0.5}s`;
         });
     </script>
 </body>
