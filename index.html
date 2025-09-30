@@ -4,78 +4,80 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Root: Reality's Compiler</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       background: #000;
+      color: #00ff88;
+      font-family: 'Orbitron', monospace;
+      overflow: hidden;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: 'Orbitron', monospace;
     }
-
-    .title-container {
-      position: relative;
+    #titleScreen {
       text-align: center;
+      position: relative;
+      z-index: 10;
     }
-
     .electric-title {
-      font-size: 3.5rem;
-      color: #00ff88;
+      font-size: 4.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
       text-shadow:
         0 0 10px #00ff88,
         0 0 20px #00ff88,
-        0 0 30px #00ff88,
-        0 0 40px #00ff88;
-      letter-spacing: 2px;
-      animation: pulse 2s infinite alternate, glitch 3s infinite;
+        0 0 30px #00ff88;
+      animation: pulse 2s infinite alternate, glitch 4s infinite;
       position: relative;
-      z-index: 2;
     }
-
-    /* Static electric "aura" layer */
+    .slogan {
+      font-size: 1.3rem;
+      margin-bottom: 2.5rem;
+      color: #00cc66;
+      text-shadow: 0 0 8px #00cc66;
+    }
+    .start-btn {
+      background: transparent;
+      color: #00ff88;
+      border: 2px solid #00ff88;
+      padding: 14px 32px;
+      font-size: 1.2rem;
+      font-family: 'Orbitron', monospace;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+      margin-top: 1rem;
+    }
+    .start-btn:hover {
+      background: rgba(0, 255, 136, 0.2);
+      box-shadow: 0 0 20px #00ff88;
+      transform: scale(1.05);
+    }
+    /* Static Electric Aura */
     .electric-aura {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: transparent;
-      z-index: 1;
       pointer-events: none;
-      opacity: 0.7;
+      z-index: 1;
+      opacity: 0.6;
       filter: blur(8px);
-      animation: staticNoise 0.1s infinite steps(1);
     }
-
-    /* Generate static noise using pseudo-element */
-    .electric-aura::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        radial-gradient(circle, #00ff88 1px, transparent 1px),
-        radial-gradient(circle, #00cc66 1px, transparent 1px),
-        radial-gradient(circle, #00aa55 1px, transparent 1px);
-      background-size: 20px 20px, 30px 30px, 40px 40px;
-      background-position: 
-        0 0, 
-        7px 13px, 
-        19px 5px;
-      opacity: 0.3;
-      animation: staticDrift 0.8s infinite alternate;
-    }
-
     /* Animations */
     @keyframes pulse {
       0% { text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88; }
       100% { text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88, 0 0 60px #00ff88; }
     }
-
     @keyframes glitch {
       0%, 100% { transform: translateX(0); }
       94% { transform: translateX(0); }
@@ -84,24 +86,144 @@
       97% { transform: translateX(-1px); }
       98% { transform: translateX(1px); }
     }
-
-    @keyframes staticNoise {
-      0% { opacity: 0.2; }
-      50% { opacity: 0.4; }
-      100% { opacity: 0.3; }
-    }
-
-    @keyframes staticDrift {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(3px, -2px); }
-    }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="title-container">
-    <div class="electric-aura"></div>
-    <h1 class="electric-title">Root: Reality's Compiler</h1>
+  <!-- Electric Aura Layer -->
+  <div class="electric-aura" id="electricAura"></div>
+
+  <!-- Title Screen -->
+  <div id="titleScreen">
+    <h1 class="electric-title">ROOT: REALITY'S COMPILER</h1>
+    <div class="slogan">Where your dreams become code</div>
+    <button class="start-btn" onclick="startGame()">> COMPILE REALITY</button>
   </div>
+
+  <script>
+    // ==========================
+    // STATIC ELECTRIC AURA
+    // ==========================
+    const aura = document.getElementById('electricAura');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function createAura() {
+      aura.innerHTML = '';
+      const particleCount = 150;
+      for (let i = 0; i < particleCount; i++) {
+        const dot = document.createElement('div');
+        dot.style.position = 'absolute';
+        dot.style.width = Math.random() * 3 + 1 + 'px';
+        dot.style.height = dot.style.width;
+        dot.style.backgroundColor = '#00ff88';
+        dot.style.left = Math.random() * width + 'px';
+        dot.style.top = Math.random() * height + 'px';
+        dot.style.borderRadius = '50%';
+        dot.style.opacity = Math.random() * 0.5 + 0.2;
+        dot.style.boxShadow = '0 0 10px #00ff88';
+        aura.appendChild(dot);
+        
+        // Animate
+        animateParticle(dot);
+      }
+    }
+
+    function animateParticle(dot) {
+      const duration = Math.random() * 3 + 2;
+      dot.style.transition = `opacity ${duration}s, transform ${duration}s`;
+      setTimeout(() => {
+        dot.style.opacity = '0';
+        dot.style.transform = 'scale(2)';
+        setTimeout(() => {
+          if (dot.parentNode) {
+            dot.remove();
+            // Recreate to maintain density
+            const newDot = document.createElement('div');
+            Object.assign(newDot.style, dot.style);
+            newDot.style.opacity = '0.3';
+            newDot.style.transform = 'scale(0.5)';
+            aura.appendChild(newDot);
+            animateParticle(newDot);
+          }
+        }, duration * 1000);
+      }, Math.random() * 2000);
+    }
+
+    // Initialize aura
+    createAura();
+
+    // ==========================
+    // 32-BIT CATCHY MUSIC
+    // ==========================
+    let audioCtx = null;
+    let isMusicOn = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playNote(freq, type = 'square', time, duration = 0.25) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, time);
+      gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + duration);
+    }
+
+    function playMelody() {
+      if (!isMusicOn) return;
+      const now = audioCtx.currentTime;
+      // Catchy 32-bit melody (inspired by Megalovania but original)
+      const notes = [587, 587, 587, 1175, 587, 587, 587, 440]; // D5 D5 D5 D6 D5 D5 D5 A4
+      notes.forEach((freq, i) => {
+        playNote(freq, 'square', now + i * 0.3, 0.25);
+      });
+      // Bass line
+      const bass = [73, 73, 73, 55];
+      bass.forEach((freq, i) => {
+        playNote(freq, 'sawtooth', now + i * 0.6, 0.55);
+      });
+      setTimeout(playMelody, 3600); // Loop every 3.6s
+    }
+
+    function toggleMusic() {
+      initAudio();
+      isMusicOn = !isMusicOn;
+      if (isMusicOn) {
+        audioCtx.resume();
+        playMelody();
+      }
+    }
+
+    // Start music on first interaction
+    document.addEventListener('click', () => {
+      if (!isMusicOn) {
+        toggleMusic();
+      }
+    }, { once: true });
+
+    // ==========================
+    // GAME START
+    // ==========================
+    function startGame() {
+      document.getElementById('titleScreen').style.opacity = '0';
+      setTimeout(() => {
+        // In a full game, this would load the main engine
+        alert("🎮 Reality compilation initiated!\n\nThis is the title screen prototype.\n\nNext: Root's movement, combat, and the first Subprogram!");
+      }, 500);
+    }
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      createAura();
+    });
+  </script>
 </body>
 </html>
