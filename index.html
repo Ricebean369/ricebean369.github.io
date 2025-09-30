@@ -5,243 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Root: Reality's Compiler</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Courier New', monospace;
-    }
     body {
       background: #000;
-      color: #00ff88;
-      overflow: hidden;
-      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Orbitron', monospace;
     }
-    #gameCanvas {
-      border: 2px solid #00ff88;
-      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-      display: none;
-    }
-    #ui {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 14px;
-      text-shadow: 0 0 5px #00ff88;
-    }
-    #titleScreen {
+
+    .title-container {
+      position: relative;
       text-align: center;
-      z-index: 10;
     }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 10px #00ff88;
-    }
-    .slogan {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      color: #00cc66;
-    }
-    button {
-      background: transparent;
+
+    .electric-title {
+      font-size: 3.5rem;
       color: #00ff88;
-      border: 2px solid #00ff88;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      margin: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
+      text-shadow:
+        0 0 10px #00ff88,
+        0 0 20px #00ff88,
+        0 0 30px #00ff88,
+        0 0 40px #00ff88;
+      letter-spacing: 2px;
+      animation: pulse 2s infinite alternate, glitch 3s infinite;
+      position: relative;
+      z-index: 2;
     }
-    button:hover {
-      background: rgba(0, 255, 136, 0.2);
-      box-shadow: 0 0 15px #00ff88;
-    }
-    .save-ui {
+
+    /* Static electric "aura" layer */
+    .electric-aura {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(0, 10, 0, 0.7);
-      padding: 10px;
-      border: 1px solid #00ff88;
-      border-radius: 5px;
-      display: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.7;
+      filter: blur(8px);
+      animation: staticNoise 0.1s infinite steps(1);
     }
-    .save-ui input {
-      background: #000;
-      color: #00ff88;
-      border: 1px solid #00ff88;
-      padding: 5px;
-      margin: 5px;
+
+    /* Generate static noise using pseudo-element */
+    .electric-aura::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle, #00ff88 1px, transparent 1px),
+        radial-gradient(circle, #00cc66 1px, transparent 1px),
+        radial-gradient(circle, #00aa55 1px, transparent 1px);
+      background-size: 20px 20px, 30px 30px, 40px 40px;
+      background-position: 
+        0 0, 
+        7px 13px, 
+        19px 5px;
+      opacity: 0.3;
+      animation: staticDrift 0.8s infinite alternate;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88; }
+      100% { text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88, 0 0 60px #00ff88; }
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: translateX(0); }
+      94% { transform: translateX(0); }
+      95% { transform: translateX(-2px); }
+      96% { transform: translateX(2px); }
+      97% { transform: translateX(-1px); }
+      98% { transform: translateX(1px); }
+    }
+
+    @keyframes staticNoise {
+      0% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.3; }
+    }
+
+    @keyframes staticDrift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(3px, -2px); }
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Title Screen -->
-  <div id="titleScreen">
-    <h1>ROOT: REALITY'S COMPILER</h1>
-    <div class="slogan">Where your dreams become code</div>
-    <button onclick="startGame()">> COMPILE REALITY</button>
-    <button onclick="toggleMusic()">> TOGGLE MUSIC</button>
+  <div class="title-container">
+    <div class="electric-aura"></div>
+    <h1 class="electric-title">Root: Reality's Compiler</h1>
   </div>
-
-  <!-- Game Canvas -->
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
-
-  <!-- HUD -->
-  <div id="ui">ROOT v0.1</div>
-
-  <!-- Git-style Save UI -->
-  <div class="save-ui" id="saveUI">
-    <div>git commit -m "<input type='text' id='commitMsg' placeholder='checkpoint...'>" </div>
-    <button onclick="saveGame()">Commit</button>
-    <button onclick="loadGame()">Load</button>
-  </div>
-
-  <script>
-    // ==========================
-    // AUDIO: 32-BIT CATCHY MUSIC
-    // ==========================
-    let audioCtx = null;
-    let isMusicOn = false;
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
-
-    function playNote(freq, type = 'square', time, duration = 0.2) {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.2, time);
-      gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(time);
-      osc.stop(time + duration);
-    }
-
-    function playMelody() {
-      if (!isMusicOn) return;
-      const now = audioCtx.currentTime;
-      const notes = [523, 659, 784, 1046, 784, 659, 523]; // C5 E5 G5 C6 G5 E5 C5
-      notes.forEach((freq, i) => {
-        playNote(freq, 'square', now + i * 0.3, 0.25);
-      });
-      setTimeout(playMelody, 3000);
-    }
-
-    function toggleMusic() {
-      initAudio();
-      isMusicOn = !isMusicOn;
-      if (isMusicOn) {
-        audioCtx.resume();
-        playMelody();
-      }
-    }
-
-    // ==========================
-    // GAME ENGINE
-    // ==========================
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    let gameRunning = false;
-
-    // Player
-    const player = {
-      x: 400,
-      y: 300,
-      size: 20,
-      speed: 5,
-      color: '#00ff88'
-    };
-
-    // Input
-    const keys = {};
-    window.addEventListener('keydown', (e) => keys[e.key] = true);
-    window.addEventListener('keyup', (e) => keys[e.key] = false);
-
-    function updatePlayer() {
-      if (keys['ArrowUp'] || keys['w']) player.y -= player.speed;
-      if (keys['ArrowDown'] || keys['s']) player.y += player.speed;
-      if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
-      if (keys['ArrowRight'] || keys['d']) player.x += player.speed;
-
-      // Boundary clamp
-      player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
-      player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
-    }
-
-    function drawPlayer() {
-      ctx.fillStyle = player.color;
-      ctx.fillRect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
-      // Glowing effect
-      ctx.shadowColor = player.color;
-      ctx.shadowBlur = 15;
-      ctx.fillRect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
-      ctx.shadowBlur = 0;
-    }
-
-    function drawBackground() {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // Matrix-style falling chars
-      ctx.fillStyle = 'rgba(0, 255, 136, 0.1)';
-      for (let i = 0; i < 30; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        ctx.fillRect(x, y, 2, Math.random() * 20 + 5);
-      }
-    }
-
-    function gameLoop() {
-      if (!gameRunning) return;
-      drawBackground();
-      updatePlayer();
-      drawPlayer();
-      requestAnimationFrame(gameLoop);
-    }
-
-    function startGame() {
-      document.getElementById('titleScreen').style.display = 'none';
-      canvas.style.display = 'block';
-      document.getElementById('saveUI').style.display = 'block';
-      gameRunning = true;
-      gameLoop();
-    }
-
-    // ==========================
-    // SAVE SYSTEM (Git-inspired)
-    // ==========================
-    function saveGame() {
-      const msg = document.getElementById('commitMsg').value || 'checkpoint';
-      const saveData = {
-        x: player.x,
-        y: player.y,
-        timestamp: Date.now(),
-        message: msg
-      };
-      localStorage.setItem('root_save', JSON.stringify(saveData));
-      alert(`✅ Committed: "${msg}"`);
-    }
-
-    function loadGame() {
-      const data = localStorage.getItem('root_save');
-      if (data) {
-        const save = JSON.parse(data);
-        player.x = save.x;
-        player.y = save.y;
-        alert(`💾 Loaded: "${save.message}"`);
-      } else {
-        alert('⚠️ No save found. Play and commit first!');
-      }
-    }
-  </script>
 </body>
 </html>
