@@ -1,1359 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RiceBean369 - Quantum Digital Dreamscape</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        /* Audio Portal Styles */
-        .audio-portal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #000000 0%, #001100 100%);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            cursor: pointer;
-        }
-
-        .portal-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 4rem;
-            color: #00ff88;
-            text-shadow: 0 0 30px #00ff88;
-            margin-bottom: 2rem;
-            animation: portalPulse 2s infinite;
-        }
-
-        @keyframes portalPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
-        .portal-subtitle {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            color: #00ff88;
-            text-shadow: 0 0 20px #00ff88;
-            margin-bottom: 3rem;
-        }
-
-        .enter-button {
-            padding: 1.5rem 3rem;
-            background: transparent;
-            border: 3px solid #00ff88;
-            color: #00ff88;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            animation: buttonGlow 2s infinite;
-        }
-
-        @keyframes buttonGlow {
-            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.5); }
-            50% { box-shadow: 0 0 50px rgba(0, 255, 136, 0.8); }
-        }
-
-        .enter-button:hover {
-            background: rgba(0, 255, 136, 0.2);
-            transform: scale(1.1);
-        }
-
-        .portal-instruction {
-            font-family: 'Orbitron', monospace;
-            color: #00ff88;
-            margin-top: 2rem;
-            font-size: 1rem;
-            opacity: 0.7;
-        }
-
-        /* Music Controls Update */
-        .music-controls {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .music-btn {
-            padding: 0.8rem 1.5rem;
-            background: rgba(0, 255, 136, 0.1);
-            border: 2px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        .music-btn:hover {
-            background: rgba(0, 255, 136, 0.3);
-            box-shadow: var(--matrix-glow);
-        }
-
-        .visualizer {
-            width: 150px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--neon-green);
-            display: flex;
-            align-items: end;
-            gap: 2px;
-            padding: 5px;
-        }
-
-        .bar {
-            flex: 1;
-            background: var(--neon-green);
-            transition: height 0.1s ease;
-            border-radius: 1px;
-        }
-
-        .audio-credit {
-            font-size: 0.7rem;
-            color: var(--neon-green);
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-
-        /* Rest of your existing CSS remains the same */
-        :root {
-            --neon-green: #00ff88;
-            --neon-blue: #0066ff;
-            --neon-purple: #aa00ff;
-            --neon-pink: #ff00aa;
-            --matrix-glow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: #000;
-            color: #fff;
-            overflow-x: hidden;
-            cursor: none;
-        }
-
-        /* Custom Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--neon-green);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-        }
-
-        .cursor-follower {
-            width: 8px;
-            height: 8px;
-            background: var(--neon-green);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Quantum Background */
-        #quantumCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -3;
-        }
-
-        /* Holographic Interface */
-        .hologram {
-            position: relative;
-            background: rgba(0, 20, 40, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 15px;
-            box-shadow: var(--matrix-glow),
-                        inset 0 0 50px rgba(0, 255, 136, 0.1);
-        }
-
-        .hologram::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple), var(--neon-pink));
-            border-radius: 17px;
-            z-index: -1;
-            animation: hologramBorder 3s linear infinite;
-        }
-
-        @keyframes hologramBorder {
-            0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
-            50% { opacity: 0.7; }
-        }
-
-        /* Main Layout */
-        .cyber-container {
-            position: relative;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Neural Network Background */
-        .neural-network {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            opacity: 0.3;
-        }
-
-        /* Header with 3D Effect */
-        .cyber-header {
-            position: relative;
-            padding: 4rem 2rem;
-            text-align: center;
-            background: linear-gradient(180deg, rgba(0,255,136,0.1) 0%, transparent 100%);
-        }
-
-        .quantum-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 5rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            animation: titleGlitch 5s infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes titleGlitch {
-            0%, 100% { transform: translateX(0) skewX(0); }
-            95% { transform: translateX(0) skewX(0); }
-            96% { transform: translateX(-10px) skewX(-5deg); }
-            97% { transform: translateX(10px) skewX(5deg); }
-            98% { transform: translateX(-5px) skewX(-2deg); }
-        }
-
-        .slogan-3d {
-            font-size: 1.8rem;
-            color: var(--neon-green);
-            text-shadow: var(--matrix-glow);
-            transform: perspective(500px) rotateX(10deg);
-            animation: sloganFloat 6s ease-in-out infinite;
-        }
-
-        @keyframes sloganFloat {
-            0%, 100% { transform: perspective(500px) rotateX(10deg) translateY(0); }
-            50% { transform: perspective(500px) rotateX(10deg) translateY(-10px); }
-        }
-
-        /* Quantum Navigation */
-        .quantum-nav {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            padding: 2rem;
-            background: rgba(0, 10, 20, 0.8);
-            backdrop-filter: blur(15px);
-        }
-
-        .nav-portal {
-            position: relative;
-            padding: 1rem 2rem;
-            color: var(--neon-green);
-            text-decoration: none;
-            font-family: 'Orbitron', monospace;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            background: linear-gradient(45deg, transparent 50%, rgba(0, 255, 136, 0.1) 50%);
-            background-size: 300% 300%;
-            background-position: 100% 100%;
-        }
-
-        .nav-portal:hover {
-            background-position: 0% 0%;
-            border: 2px solid var(--neon-green);
-            box-shadow: var(--matrix-glow);
-            transform: translateY(-5px) scale(1.1);
-        }
-
-        /* Main Content Grid */
-        .cyber-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 3rem;
-            padding: 4rem;
-            max-width: 1800px;
-            margin: 0 auto;
-        }
-
-        /* Holographic Cards */
-        .holo-card {
-            position: relative;
-            padding: 3rem;
-            min-height: 400px;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            overflow: hidden;
-        }
-
-        .holo-card:hover {
-            transform: translateY(-20px) scale(1.02);
-            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3),
-                        inset 0 0 100px rgba(0, 255, 136, 0.1);
-        }
-
-        .card-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .cyber-text {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Quantum Buttons */
-        .quantum-btn {
-            position: relative;
-            padding: 1.5rem 3rem;
-            background: transparent;
-            border: 2px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            margin-top: 2rem;
-        }
-
-        .quantum-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .quantum-btn:hover::before {
-            left: 100%;
-        }
-
-        .quantum-btn:hover {
-            background: rgba(0, 255, 136, 0.1);
-            box-shadow: var(--matrix-glow);
-            transform: translateY(-3px);
-        }
-
-        /* Animated Background Elements */
-        .floating-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .shape {
-            position: absolute;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-100vh) rotate(360deg); }
-        }
-
-        /* Game Portal */
-        .game-portal {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            z-index: 1000;
-            text-align: center;
-        }
-
-        .game-activator {
-            padding: 1.5rem 2.5rem;
-            background: rgba(0, 255, 136, 0.3);
-            border: 3px solid var(--neon-green);
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-            animation: pulse 2s infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 255, 136, 0.8); }
-            100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
-        }
-
-        .game-activator:hover {
-            background: rgba(0, 255, 136, 0.5);
-            box-shadow: 0 0 40px rgba(0, 255, 136, 1);
-            transform: scale(1.1);
-        }
-
-        .game-instructions {
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
-            text-align: center;
-            max-width: 200px;
-        }
-
-        /* Game Overlay */
-        .game-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .game-container {
-            position: relative;
-            border: 3px solid var(--neon-green);
-            box-shadow: var(--matrix-glow);
-            border-radius: 15px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        #gameCanvas {
-            background: #000;
-            display: block;
-        }
-
-        .game-ui {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--neon-green);
-        }
-
-        .game-controls {
-            margin-top: 2rem;
-            display: flex;
-            gap: 1rem;
-        }
-
-        .close-game, .reset-game {
-            padding: 1rem 2rem;
-            background: transparent;
-            border: 2px solid var(--neon-pink);
-            color: var(--neon-pink);
-            font-family: 'Orbitron', monospace;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .close-game:hover, .reset-game:hover {
-            background: rgba(255, 0, 170, 0.2);
-            box-shadow: 0 0 20px var(--neon-pink);
-            transform: translateY(-2px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .quantum-title { font-size: 3rem; }
-            .cyber-grid { grid-template-columns: 1fr; padding: 2rem; }
-            .quantum-nav { flex-direction: column; gap: 1rem; }
-            .game-activator { padding: 1rem 1.5rem; font-size: 0.9rem; }
-            .portal-title { font-size: 2.5rem; }
-            .portal-subtitle { font-size: 1.2rem; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Root: Reality's Compiler</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Courier New', monospace;
+    }
+    body {
+      background: #000;
+      color: #00ff88;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #gameCanvas {
+      border: 2px solid #00ff88;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+      display: none;
+    }
+    #ui {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 14px;
+      text-shadow: 0 0 5px #00ff88;
+    }
+    #titleScreen {
+      text-align: center;
+      z-index: 10;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00ff88;
+    }
+    .slogan {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #00cc66;
+    }
+    button {
+      background: transparent;
+      color: #00ff88;
+      border: 2px solid #00ff88;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      margin: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: rgba(0, 255, 136, 0.2);
+      box-shadow: 0 0 15px #00ff88;
+    }
+    .save-ui {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 10, 0, 0.7);
+      padding: 10px;
+      border: 1px solid #00ff88;
+      border-radius: 5px;
+      display: none;
+    }
+    .save-ui input {
+      background: #000;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      padding: 5px;
+      margin: 5px;
+    }
+  </style>
 </head>
 <body>
-    <!-- Audio Portal - This shows first and starts audio -->
-    <div class="audio-portal" id="audioPortal">
-        <div class="portal-title">RICEBEAN369</div>
-        <div class="portal-subtitle">32-BIT CATCHY CYBERPUNK BEATS</div>
-        <button class="enter-button" onclick="enterWebsite()">ENTER MATRIX</button>
-        <div class="portal-instruction">Click to unlock audio and enter the experience</div>
-    </div>
-
-    <!-- Rest of your website content (initially hidden) -->
-    <div id="mainContent" style="display: none;">
-        <!-- Custom Cursor -->
-        <div class="cursor"></div>
-        <div class="cursor-follower"></div>
-
-        <!-- Quantum Background Canvas -->
-        <canvas id="quantumCanvas"></canvas>
-
-        <!-- Neural Network -->
-        <canvas class="neural-network"></canvas>
-
-        <!-- Floating Shapes -->
-        <div class="floating-shapes" id="floatingShapes"></div>
-
-        <!-- Music Controls -->
-        <div class="music-controls">
-            <button class="music-btn" onclick="toggleMusic()" id="musicToggle">🔊 BEATS ON</button>
-            <div class="visualizer" id="audioVisualizer">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-            <div class="audio-credit">CATCHY 32-BIT CYBERPUNK</div>
-        </div>
-
-        <!-- Game Portal -->
-        <div class="game-portal">
-            <button class="game-activator" onclick="activateGame()">🎮 PLAY CYBERPONG</button>
-            <div class="game-instructions">Move mouse to control paddle • Break all bricks!</div>
-        </div>
-
-        <!-- Game Overlay -->
-        <div class="game-overlay" id="gameOverlay">
-            <div class="game-container">
-                <canvas id="gameCanvas" width="800" height="600"></canvas>
-                <div class="game-ui">
-                    <div>SCORE: <span id="score">0</span></div>
-                    <div>LIVES: <span id="lives">3</span></div>
-                    <div>LEVEL: <span id="level">1</span></div>
-                </div>
-            </div>
-            <div class="game-controls">
-                <button class="close-game" onclick="deactivateGame()">EXIT MATRIX</button>
-                <button class="reset-game" onclick="resetGame()">RESET REALITY</button>
-            </div>
-            <div class="game-instructions">Move your mouse left/right to control the paddle • Don't let the ball fall!</div>
-        </div>
-
-        <!-- Main Website Content -->
-        <div class="cyber-container">
-            <header class="cyber-header">
-                <h1 class="quantum-title">RICEBEAN369</h1>
-                <div class="slogan-3d">WHERE QUANTUM DREAMS BECOME DIGITAL REALITY</div>
-            </header>
-
-            <nav class="quantum-nav">
-                <a href="#home" class="nav-portal">Quantum Home</a>
-                <a href="#about" class="nav-portal">Neural Core</a>
-                <a href="#projects" class="nav-portal">Digital Genesis</a>
-                <a href="#contact" class="nav-portal">Transmission</a>
-            </nav>
-
-            <main class="cyber-grid">
-                <section id="home" class="holo-card hologram">
-                    <h2 class="card-title">SYSTEM BOOT</h2>
-                    <p class="cyber-text terminal-line" style="animation-delay: 0.5s;">> Initializing quantum dream processor...</p>
-                    <p class="cyber-text terminal-line" style="animation-delay: 1s;">> Loading neural interface protocols...</p>
-                    <p class="cyber-text terminal-line" style="animation-delay: 1.5s;">> Establishing connection to digital consciousness...</p>
-                    <p class="cyber-text terminal-line" style="animation-delay: 2s;">> Welcome to the next dimension of web development.</p>
-                    <button class="quantum-btn">ACTIVATE QUANTUM MODE</button>
-                </section>
-
-                <section id="about" class="holo-card hologram">
-                    <h2 class="card-title">NEURAL CORE</h2>
-                    <p class="cyber-text">> Quantum Developer Matrix: ONLINE</p>
-                    <p class="cyber-text">> Reality Distortion Field: ACTIVE</p>
-                    <p class="cyber-text">> Dream Compilation Engine: OPTIMIZED</p>
-                    <p class="cyber-text">> Specializing in bending reality through code and creating digital experiences that transcend imagination.</p>
-                </section>
-
-                <section id="projects" class="holo-card hologram">
-                    <h2 class="card-title">DIGITAL GENESIS</h2>
-                    <p class="cyber-text">> Project T-800: DREAM COMPILER</p>
-                    <p class="cyber-text">> Status: QUANTUM ENTANGLED</p>
-                    <p class="cyber-text">> Project M-400: REALITY ENGINE</p>
-                    <p class="cyber-text">> Status: DIMENSION HOPPING</p>
-                    <p class="cyber-text">> Project X-900: NEURAL INTERFACE</p>
-                    <p class="cyber-text">> Status: CONSCIOUSNESS SYNCHRONIZED</p>
-                </section>
-
-                <section id="contact" class="holo-card hologram">
-                    <h2 class="card-title">QUANTUM TRANSMISSION</h2>
-                    <p class="cyber-text">> Transmission Protocol: QUANTUM ENTANGLED</p>
-                    <p class="cyber-text">> Bandwidth: INFINITE</p>
-                    <p class="cyber-text">> Destination: hello@ricebean369.com</p>
-                    <p class="cyber-text">> Ready to receive your quantum dreams...</p>
-                    <button class="quantum-btn">INITIATE TRANSMISSION</button>
-                </section>
-            </main>
-        </div>
-    </div>
-
-    <script>
-        // ==================== 32-BIT CATCHY BEATS AUDIO SYSTEM ====================
-        class CatchyBeatsAudio {
-            constructor() {
-                this.audioContext = null;
-                this.mainMusic = null;
-                this.gameMusic = null;
-                this.currentMusic = null;
-                this.isPlaying = false;
-                this.masterGain = null;
-                this.analyser = null;
-                this.scheduleTimer = null;
-                
-                this.init();
-            }
-
-            init() {
-                try {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    this.masterGain = this.audioContext.createGain();
-                    this.masterGain.gain.value = 0.4;
-                    this.masterGain.connect(this.audioContext.destination);
-
-                    this.analyser = this.audioContext.createAnalyser();
-                    this.analyser.fftSize = 256;
-                    this.masterGain.connect(this.analyser);
-
-                    console.log('🎵 32-Bit Catchy Beats: SYSTEM ONLINE');
-                } catch (e) {
-                    console.log('Web Audio API not supported:', e);
-                }
-            }
-
-            // ==================== MAIN WEBSITE MUSIC ====================
-            createMainMusic() {
-                const now = this.audioContext.currentTime;
-                const bpm = 128;
-                const beatDuration = 60 / bpm;
-                
-                // CATCHY DRUM PATTERN
-                this.createDrumPattern(now, beatDuration, 16);
-                
-                // MEMORABLE BASS LINE
-                this.createBassLine(now, beatDuration);
-                
-                // CATCHY MELODY
-                this.createMainMelody(now, beatDuration);
-                
-                // ATMOSPHERIC PADS
-                this.createAtmosphere(now, beatDuration);
-                
-                // Schedule next measure
-                this.scheduleTimer = setTimeout(() => {
-                    if (this.isPlaying && this.currentMusic === 'main') {
-                        this.createMainMusic();
-                    }
-                }, beatDuration * 16 * 1000);
-            }
-
-            createDrumPattern(startTime, beatDuration, beats) {
-                // KICK - boom boom boom boom
-                const kickPattern = [0, 4, 8, 12];
-                kickPattern.forEach(beat => {
-                    this.createKick(startTime + beat * beatDuration);
-                });
-
-                // SNARE - clap on 2 and 4
-                const snarePattern = [4, 12];
-                snarePattern.forEach(beat => {
-                    this.createSnare(startTime + beat * beatDuration);
-                });
-
-                // HIHAT - constant tiki-tiki-tiki
-                for (let i = 0; i < beats; i += 2) {
-                    this.createHiHat(startTime + i * beatDuration, 0.1);
-                }
-
-                // CYMBAL CRASHES for emphasis
-                this.createCymbalCrash(startTime);
-                this.createCymbalCrash(startTime + 8 * beatDuration);
-            }
-
-            createBassLine(startTime, beatDuration) {
-                // CATCHY BASS PATTERN: D D D A
-                const bassNotes = [
-                    { time: 0, note: 'D2', duration: 1.5 },
-                    { time: 2, note: 'D2', duration: 1.5 },
-                    { time: 4, note: 'D2', duration: 1.5 },
-                    { time: 6, note: 'A1', duration: 1.5 },
-                    { time: 8, note: 'D2', duration: 1.5 },
-                    { time: 10, note: 'D2', duration: 1.5 },
-                    { time: 12, note: 'D2', duration: 1.5 },
-                    { time: 14, note: 'A1', duration: 1.5 }
-                ];
-
-                bassNotes.forEach(({ time, note, duration }) => {
-                    this.createBassNote(startTime + time * beatDuration, note, duration * beatDuration);
-                });
-            }
-
-            createMainMelody(startTime, beatDuration) {
-                // CATCHY MELODY with variations
-                const melodyNotes = [
-                    { time: 0, note: 'D5', duration: 0.5 },
-                    { time: 0.5, note: 'D5', duration: 0.5 },
-                    { time: 1, note: 'D5', duration: 0.5 },
-                    { time: 1.5, note: 'D6', duration: 0.5 },
-                    { time: 2, note: 'D5', duration: 0.5 },
-                    { time: 2.5, note: 'D5', duration: 0.5 },
-                    { time: 3, note: 'D5', duration: 0.5 },
-                    { time: 3.5, note: 'A4', duration: 0.5 },
-                    
-                    // Variation
-                    { time: 8, note: 'F5', duration: 0.25 },
-                    { time: 8.25, note: 'G5', duration: 0.25 },
-                    { time: 8.5, note: 'A5', duration: 0.5 },
-                    { time: 9, note: 'G5', duration: 0.25 },
-                    { time: 9.25, note: 'F5', duration: 0.25 },
-                    { time: 9.5, note: 'E5', duration: 0.5 }
-                ];
-
-                melodyNotes.forEach(({ time, note, duration }) => {
-                    this.createMelodyNote(startTime + time * beatDuration, note, duration * beatDuration);
-                });
-            }
-
-            createAtmosphere(startTime, beatDuration) {
-                // Warm pads in background
-                this.createPadNote(startTime, 'D3', 8 * beatDuration);
-                this.createPadNote(startTime + 8 * beatDuration, 'A2', 8 * beatDuration);
-            }
-
-            // ==================== GAME MUSIC ====================
-            createGameMusic() {
-                const now = this.audioContext.currentTime;
-                const bpm = 145;
-                const beatDuration = 60 / bpm;
-                
-                // INTENSE GAME DRUMS
-                this.createGameDrums(now, beatDuration, 16);
-                
-                // DRIVING GAME BASS
-                this.createGameBass(now, beatDuration);
-                
-                // ENERGETIC GAME MELODY
-                this.createGameMelody(now, beatDuration);
-                
-                // Schedule next measure
-                this.scheduleTimer = setTimeout(() => {
-                    if (this.isPlaying && this.currentMusic === 'game') {
-                        this.createGameMusic();
-                    }
-                }, beatDuration * 16 * 1000);
-            }
-
-            createGameDrums(startTime, beatDuration, beats) {
-                // FAST KICK PATTERN
-                for (let i = 0; i < beats; i += 2) {
-                    this.createKick(startTime + i * beatDuration);
-                }
-
-                // ROLLING SNARES
-                const snarePattern = [2, 6, 10, 14];
-                snarePattern.forEach(beat => {
-                    this.createSnare(startTime + beat * beatDuration);
-                });
-
-                // FAST HIHATS
-                for (let i = 0; i < beats; i++) {
-                    this.createHiHat(startTime + i * beatDuration, 0.05);
-                }
-            }
-
-            createGameBass(startTime, beatDuration) {
-                const bassNotes = [
-                    { time: 0, note: 'G1', duration: 0.5 },
-                    { time: 0.5, note: 'G1', duration: 0.5 },
-                    { time: 1, note: 'G1', duration: 0.5 },
-                    { time: 1.5, note: 'G1', duration: 0.5 },
-                    { time: 2, note: 'F1', duration: 0.5 },
-                    { time: 2.5, note: 'F1', duration: 0.5 },
-                    { time: 3, note: 'E1', duration: 0.5 },
-                    { time: 3.5, note: 'E1', duration: 0.5 }
-                ];
-
-                bassNotes.forEach(({ time, note, duration }) => {
-                    this.createBassNote(startTime + time * beatDuration, note, duration * beatDuration);
-                });
-            }
-
-            createGameMelody(startTime, beatDuration) {
-                const melodyNotes = [
-                    { time: 0, note: 'G4', duration: 0.25 },
-                    { time: 0.25, note: 'A4', duration: 0.25 },
-                    { time: 0.5, note: 'B4', duration: 0.25 },
-                    { time: 0.75, note: 'C5', duration: 0.25 },
-                    { time: 1, note: 'D5', duration: 0.5 },
-                    { time: 1.5, note: 'D5', duration: 0.5 },
-                    { time: 2, note: 'C5', duration: 0.25 },
-                    { time: 2.25, note: 'B4', duration: 0.25 },
-                    { time: 2.5, note: 'A4', duration: 0.25 },
-                    { time: 2.75, note: 'G4', duration: 0.25 }
-                ];
-
-                melodyNotes.forEach(({ time, note, duration }) => {
-                    this.createMelodyNote(startTime + time * beatDuration, note, duration * beatDuration);
-                });
-            }
-
-            // ==================== SOUND GENERATORS ====================
-            createKick(time) {
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.frequency.setValueAtTime(150, time);
-                oscillator.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(1, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                oscillator.start(time);
-                oscillator.stop(time + 0.5);
-            }
-
-            createSnare(time) {
-                const noiseBuffer = this.audioContext.createBuffer(1, 22050, 22050);
-                const data = noiseBuffer.getChannelData(0);
-                for (let i = 0; i < 22050; i++) {
-                    data[i] = Math.random() * 2 - 1;
-                }
-
-                const noise = this.audioContext.createBufferSource();
-                noise.buffer = noiseBuffer;
-
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'highpass';
-                filter.frequency.value = 1000;
-
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.5, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
-
-                noise.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(this.masterGain);
-
-                noise.start(time);
-                noise.stop(time + 0.3);
-            }
-
-            createHiHat(time, duration) {
-                const buffer = this.audioContext.createBuffer(1, 2205, 22050);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < 2205; i++) {
-                    data[i] = (Math.random() * 2 - 1) * 0.5;
-                }
-
-                const source = this.audioContext.createBufferSource();
-                source.buffer = buffer;
-
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.1, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + duration);
-
-                source.connect(gainNode);
-                gainNode.connect(this.masterGain);
-
-                source.start(time);
-                source.stop(time + duration);
-            }
-
-            createCymbalCrash(time) {
-                const buffer = this.audioContext.createBuffer(1, 44100, 44100);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < 44100; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.max(0, 1 - i / 44100);
-                }
-
-                const source = this.audioContext.createBufferSource();
-                source.buffer = buffer;
-
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.3, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + 2);
-
-                source.connect(gainNode);
-                gainNode.connect(this.masterGain);
-
-                source.start(time);
-                source.stop(time + 2);
-            }
-
-            createBassNote(time, note, duration) {
-                const frequency = this.noteToFrequency(note);
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.value = frequency;
-                
-                const filter = this.audioContext.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 400;
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.3, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + duration);
-                
-                oscillator.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                oscillator.start(time);
-                oscillator.stop(time + duration);
-            }
-
-            createMelodyNote(time, note, duration) {
-                const frequency = this.noteToFrequency(note);
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.type = 'square';
-                oscillator.frequency.value = frequency;
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.2, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + duration);
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                oscillator.start(time);
-                oscillator.stop(time + duration);
-            }
-
-            createPadNote(time, note, duration) {
-                const frequency = this.noteToFrequency(note);
-                const oscillator = this.audioContext.createOscillator();
-                oscillator.type = 'sine';
-                oscillator.frequency.value = frequency;
-                
-                const gainNode = this.audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.1, time);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, time + duration);
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(this.masterGain);
-                
-                oscillator.start(time);
-                oscillator.stop(time + duration);
-            }
-
-            noteToFrequency(note) {
-                const notes = {
-                    'A1': 55.00, 'D2': 73.42, 'E2': 82.41, 'F2': 87.31, 'G2': 98.00,
-                    'A2': 110.00, 'D3': 146.83, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
-                    'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99,
-                    'A5': 880.00, 'D6': 1174.66
-                };
-                return notes[note] || 440;
-            }
-
-            // ==================== MUSIC CONTROL ====================
-            playMainMusic() {
-                if (!this.audioContext) this.init();
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume();
-                }
-                
-                this.stopMusic();
-                this.currentMusic = 'main';
-                this.isPlaying = true;
-                this.createMainMusic();
-                this.updateVisualizer();
-            }
-
-            playGameMusic() {
-                if (!this.audioContext) this.init();
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume();
-                }
-                
-                this.stopMusic();
-                this.currentMusic = 'game';
-                this.isPlaying = true;
-                this.createGameMusic();
-                this.updateVisualizer();
-            }
-
-            stopMusic() {
-                this.isPlaying = false;
-                this.currentMusic = null;
-                if (this.scheduleTimer) {
-                    clearTimeout(this.scheduleTimer);
-                }
-            }
-
-            updateVisualizer() {
-                if (!this.isPlaying) return;
-                const bars = document.querySelectorAll('#audioVisualizer .bar');
-                const now = Date.now() * 0.002;
-                
-                for (let i = 0; i < bars.length; i++) {
-                    const beat = Math.sin(now * 8 + i * 0.3);
-                    const random = Math.random() * 0.3;
-                    const height = Math.max(10, (beat + 1) * 15 + random * 20) + '%';
-                    bars[i].style.height = height;
-                    
-                    const hue = (120 + Math.sin(now + i * 0.5) * 60) % 360;
-                    bars[i].style.background = `hsl(${hue}, 100%, 50%)`;
-                }
-                requestAnimationFrame(() => this.updateVisualizer());
-            }
-        }
-
-        // ==================== GAME SYSTEM ====================
-        let gameActive = false;
-        let score = 0;
-        let lives = 3;
-        let level = 1;
-        let cyberAudio = null;
-
-        const gameCanvas = document.getElementById('gameCanvas');
-        const gameCtx = gameCanvas.getContext('2d');
-        const gameOverlay = document.getElementById('gameOverlay');
-
-        const paddle = {
-            width: 100,
-            height: 20,
-            x: gameCanvas.width / 2 - 50,
-            color: '#00ff88'
-        };
-
-        const ball = {
-            x: gameCanvas.width / 2,
-            y: gameCanvas.height / 2,
-            radius: 10,
-            speedX: 5,
-            speedY: 5,
-            color: '#0066ff',
-            trail: []
-        };
-
-        let bricks = [];
-
-        function activateGame() {
-            console.log("🎮 Starting game...");
-            gameOverlay.style.display = 'flex';
-            resizeGameCanvas();
-            
-            // Switch to game music
-            if (cyberAudio) {
-                cyberAudio.playGameMusic();
-            }
-            
-            resetGame();
-        }
-
-        function deactivateGame() {
-            gameOverlay.style.display = 'none';
-            gameActive = false;
-            
-            // Switch back to main music
-            if (cyberAudio) {
-                cyberAudio.playMainMusic();
-            }
-        }
-
-        function initGame() {
-            createBricks();
-            resetBall();
-            gameActive = true;
-            gameLoop();
-        }
-
-        function createBricks() {
-            bricks = [];
-            const colors = ['#00ff88', '#0066ff', '#aa00ff', '#ff00aa'];
-            for (let row = 0; row < 4; row++) {
-                for (let col = 0; col < 8; col++) {
-                    bricks.push({
-                        x: col * (gameCanvas.width / 8),
-                        y: row * 30 + 50,
-                        width: gameCanvas.width / 8 - 5,
-                        height: 25,
-                        color: colors[row],
-                        alive: true
-                    });
-                }
-            }
-        }
-
-        function resetBall() {
-            ball.x = gameCanvas.width / 2;
-            ball.y = gameCanvas.height - 50;
-            ball.speedX = (Math.random() - 0.5) * 8;
-            ball.speedY = -5;
-            ball.trail = [];
-        }
-
-        function resetGame() {
-            score = 0;
-            lives = 3;
-            level = 1;
-            updateUI();
-            createBricks();
-            resetBall();
-            if (!gameActive) {
-                gameActive = true;
-                gameLoop();
-            }
-        }
-
-        function gameLoop() {
-            if (!gameActive) return;
-
-            gameCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-
-            drawMatrixBackground();
-            updateBall();
-            updatePaddle();
-            drawBricks();
-            drawPaddle();
-            drawBall();
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        function drawMatrixBackground() {
-            gameCtx.fillStyle = 'rgba(0, 255, 136, 0.05)';
-            for (let i = 0; i < 20; i++) {
-                gameCtx.fillRect(Math.random() * gameCanvas.width, Math.random() * gameCanvas.height, 2, Math.random() * 30 + 10);
-            }
-        }
-
-        function updateBall() {
-            ball.trail.push({x: ball.x, y: ball.y});
-            if (ball.trail.length > 8) ball.trail.shift();
-
-            ball.x += ball.speedX;
-            ball.y += ball.speedY;
-
-            if (ball.x + ball.radius > gameCanvas.width || ball.x - ball.radius < 0) {
-                ball.speedX = -ball.speedX;
-            }
-            if (ball.y - ball.radius < 0) {
-                ball.speedY = -ball.speedY;
-            }
-
-            if (ball.y + ball.radius > gameCanvas.height - paddle.height &&
-                ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-                const hitPos = (ball.x - paddle.x) / paddle.width;
-                ball.speedX = (hitPos - 0.5) * 12;
-                ball.speedY = -Math.abs(ball.speedY);
-                score += 10;
-                updateUI();
-            }
-
-            if (ball.y > gameCanvas.height) {
-                lives--;
-                updateUI();
-                if (lives <= 0) {
-                    gameOver();
-                } else {
-                    resetBall();
-                }
-            }
-
-            bricks.forEach(brick => {
-                if (brick.alive && 
-                    ball.x + ball.radius > brick.x && 
-                    ball.x - ball.radius < brick.x + brick.width &&
-                    ball.y + ball.radius > brick.y && 
-                    ball.y - ball.radius < brick.y + brick.height) {
-                    
-                    brick.alive = false;
-                    ball.speedY = -ball.speedY;
-                    score += 100;
-                    updateUI();
-
-                    if (bricks.every(b => !b.alive)) {
-                        levelUp();
-                    }
-                }
-            });
-        }
-
-        function updatePaddle() {
-            gameCanvas.addEventListener('mousemove', (e) => {
-                const rect = gameCanvas.getBoundingClientRect();
-                paddle.x = e.clientX - rect.left - paddle.width / 2;
-                if (paddle.x < 0) paddle.x = 0;
-                if (paddle.x + paddle.width > gameCanvas.width) {
-                    paddle.x = gameCanvas.width - paddle.width;
-                }
-            });
-        }
-
-        function drawBall() {
-            ball.trail.forEach((pos, index) => {
-                const alpha = 0.3 * (index / ball.trail.length);
-                gameCtx.beginPath();
-                gameCtx.arc(pos.x, pos.y, ball.radius * (index / ball.trail.length), 0, Math.PI * 2);
-                gameCtx.fillStyle = `rgba(0, 102, 255, ${alpha})`;
-                gameCtx.fill();
-            });
-
-            gameCtx.beginPath();
-            gameCtx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            gameCtx.fillStyle = ball.color;
-            gameCtx.fill();
-        }
-
-        function drawPaddle() {
-            gameCtx.fillStyle = paddle.color;
-            gameCtx.fillRect(paddle.x, gameCanvas.height - paddle.height, paddle.width, paddle.height);
-        }
-
-        function drawBricks() {
-            bricks.forEach(brick => {
-                if (brick.alive) {
-                    gameCtx.fillStyle = brick.color;
-                    gameCtx.fillRect(brick.x, brick.y, brick.width, brick.height);
-                }
-            });
-        }
-
-        function levelUp() {
-            level++;
-            updateUI();
-            createBricks();
-            resetBall();
-            ball.speedX *= 1.2;
-            ball.speedY *= 1.2;
-        }
-
-        function gameOver() {
-            gameActive = false;
-            gameCtx.fillStyle = 'rgba(255, 0, 0, 0.7)';
-            gameCtx.font = '48px Orbitron';
-            gameCtx.textAlign = 'center';
-            gameCtx.fillText('MATRIX COLLAPSED', gameCanvas.width/2, gameCanvas.height/2);
-            gameCtx.font = '24px Orbitron';
-            gameCtx.fillText(`FINAL SCORE: ${score}`, gameCanvas.width/2, gameCanvas.height/2 + 50);
-        }
-
-        function updateUI() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('lives').textContent = lives;
-            document.getElementById('level').textContent = level;
-        }
-
-        function resizeGameCanvas() {
-            gameCanvas.width = Math.min(800, window.innerWidth - 40);
-            gameCanvas.height = Math.min(600, window.innerHeight - 100);
-            resetBall();
-        }
-
-        // ==================== AUDIO PORTAL SYSTEM ====================
-        function enterWebsite() {
-            // Initialize audio system
-            cyberAudio = new CatchyBeatsAudio();
-            
-            // Hide portal and show main content
-            document.getElementById('audioPortal').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            
-            // Start main music automatically
-            if (cyberAudio) {
-                cyberAudio.playMainMusic();
-                updateMusicButton(true);
-            }
-            
-            console.log("🎵 32-Bit Catchy Beats Activated!");
-        }
-
-        function toggleMusic() {
-            if (!cyberAudio) return;
-            
-            if (cyberAudio.isPlaying) {
-                cyberAudio.stopMusic();
-                updateMusicButton(false);
-            } else {
-                cyberAudio.playMainMusic();
-                updateMusicButton(true);
-            }
-        }
-
-        function updateMusicButton(isPlaying) {
-            const button = document.getElementById('musicToggle');
-            button.textContent = isPlaying ? '🔊 BEATS ON' : '🔇 BEATS OFF';
-            button.style.borderColor = isPlaying ? '#00ff88' : '#ff0066';
-        }
-
-        // Initialize game when overlay is shown
-        gameOverlay.addEventListener('click', function initGameOnClick() {
-            if (!gameActive) {
-                initGame();
-                gameOverlay.removeEventListener('click', initGameOnClick);
-            }
-        });
-
-        window.addEventListener('resize', resizeGameCanvas);
-
-        console.log("🚀 32-Bit Catchy Cyberpunk Experience Ready!");
-    </script>
+  <!-- Title Screen -->
+  <div id="titleScreen">
+    <h1>ROOT: REALITY'S COMPILER</h1>
+    <div class="slogan">Where your dreams become code</div>
+    <button onclick="startGame()">> COMPILE REALITY</button>
+    <button onclick="toggleMusic()">> TOGGLE MUSIC</button>
+  </div>
+
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <!-- HUD -->
+  <div id="ui">ROOT v0.1</div>
+
+  <!-- Git-style Save UI -->
+  <div class="save-ui" id="saveUI">
+    <div>git commit -m "<input type='text' id='commitMsg' placeholder='checkpoint...'>" </div>
+    <button onclick="saveGame()">Commit</button>
+    <button onclick="loadGame()">Load</button>
+  </div>
+
+  <script>
+    // ==========================
+    // AUDIO: 32-BIT CATCHY MUSIC
+    // ==========================
+    let audioCtx = null;
+    let isMusicOn = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playNote(freq, type = 'square', time, duration = 0.2) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, time);
+      gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + duration);
+    }
+
+    function playMelody() {
+      if (!isMusicOn) return;
+      const now = audioCtx.currentTime;
+      const notes = [523, 659, 784, 1046, 784, 659, 523]; // C5 E5 G5 C6 G5 E5 C5
+      notes.forEach((freq, i) => {
+        playNote(freq, 'square', now + i * 0.3, 0.25);
+      });
+      setTimeout(playMelody, 3000);
+    }
+
+    function toggleMusic() {
+      initAudio();
+      isMusicOn = !isMusicOn;
+      if (isMusicOn) {
+        audioCtx.resume();
+        playMelody();
+      }
+    }
+
+    // ==========================
+    // GAME ENGINE
+    // ==========================
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let gameRunning = false;
+
+    // Player
+    const player = {
+      x: 400,
+      y: 300,
+      size: 20,
+      speed: 5,
+      color: '#00ff88'
+    };
+
+    // Input
+    const keys = {};
+    window.addEventListener('keydown', (e) => keys[e.key] = true);
+    window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+    function updatePlayer() {
+      if (keys['ArrowUp'] || keys['w']) player.y -= player.speed;
+      if (keys['ArrowDown'] || keys['s']) player.y += player.speed;
+      if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
+      if (keys['ArrowRight'] || keys['d']) player.x += player.speed;
+
+      // Boundary clamp
+      player.x = Math.max(player.size, Math.min(canvas.width - player.size, player.x));
+      player.y = Math.max(player.size, Math.min(canvas.height - player.size, player.y));
+    }
+
+    function drawPlayer() {
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+      // Glowing effect
+      ctx.shadowColor = player.color;
+      ctx.shadowBlur = 15;
+      ctx.fillRect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+      ctx.shadowBlur = 0;
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Matrix-style falling chars
+      ctx.fillStyle = 'rgba(0, 255, 136, 0.1)';
+      for (let i = 0; i < 30; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        ctx.fillRect(x, y, 2, Math.random() * 20 + 5);
+      }
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+      drawBackground();
+      updatePlayer();
+      drawPlayer();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      document.getElementById('titleScreen').style.display = 'none';
+      canvas.style.display = 'block';
+      document.getElementById('saveUI').style.display = 'block';
+      gameRunning = true;
+      gameLoop();
+    }
+
+    // ==========================
+    // SAVE SYSTEM (Git-inspired)
+    // ==========================
+    function saveGame() {
+      const msg = document.getElementById('commitMsg').value || 'checkpoint';
+      const saveData = {
+        x: player.x,
+        y: player.y,
+        timestamp: Date.now(),
+        message: msg
+      };
+      localStorage.setItem('root_save', JSON.stringify(saveData));
+      alert(`✅ Committed: "${msg}"`);
+    }
+
+    function loadGame() {
+      const data = localStorage.getItem('root_save');
+      if (data) {
+        const save = JSON.parse(data);
+        player.x = save.x;
+        player.y = save.y;
+        alert(`💾 Loaded: "${save.message}"`);
+      } else {
+        alert('⚠️ No save found. Play and commit first!');
+      }
+    }
+  </script>
 </body>
 </html>
