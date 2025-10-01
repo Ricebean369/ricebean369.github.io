@@ -1,36 +1,59 @@
 const canvas = document.getElementById('titleCanvas');
 const ctx = canvas.getContext('2d');
+const bgMusic = document.getElementById('bgMusic');
 
-const titleText = "ROOT REALITY'S COMPILER"; // No colon, blinking colon drawn separately
+const titleText = "ROOT REALITY'S COMPILER";
 let currentIndex = 0;
 let showCursor = true;
 
 const letterRevealInterval = 150; // ms
 let lastRevealTime = 0;
 
+let musicStarted = false;
+
 function drawTitle() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.font = '48px monospace';
-  ctx.fillStyle = '#00ffff';
   ctx.textBaseline = 'top';
 
-  // Draw revealed letters
-  const textToDraw = titleText.substring(0, currentIndex);
-  ctx.fillText(textToDraw, 50, 100);
+  // Draw each letter with flicker and glow effect
+  let x = 50;
+  const y = 100;
+
+  for (let i = 0; i < currentIndex; i++) {
+    const letter = titleText[i];
+
+    // Flicker glow effect: random alpha and shadow blur
+    const flickerAlpha = 0.7 + 0.3 * Math.random();
+    ctx.fillStyle = `rgba(0, 255, 255, ${flickerAlpha.toFixed(2)})`;
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 10 * flickerAlpha;
+
+    // Draw letter
+    ctx.fillText(letter, x, y);
+
+    // Advance x by letter width
+    x += ctx.measureText(letter).width;
+  }
 
   // Draw blinking colon after "ROOT"
   if (currentIndex >= 4 && showCursor) {
     const rootWidth = ctx.measureText("ROOT").width;
-    // Draw two small blue squares as colon pixels
-    ctx.fillRect(50 + rootWidth + 5, 110, 10, 10);
-    ctx.fillRect(50 + rootWidth + 5, 130, 10, 10);
+    ctx.fillStyle = '#00ffff';
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 15;
+    // Draw colon as two small squares
+    ctx.fillRect(50 + rootWidth + 5, y + 10, 10, 10);
+    ctx.fillRect(50 + rootWidth + 5, y + 40, 10, 10);
   }
 
   // Draw blinking underscore cursor at end of revealed text
   if (currentIndex < titleText.length) {
-    const partialWidth = ctx.measureText(textToDraw).width;
-    ctx.fillRect(50 + partialWidth, 140, 20, 5);
+    ctx.fillStyle = '#00ffff';
+    ctx.shadowColor = '#00ffff';
+    ctx.shadowBlur = 15;
+    ctx.fillRect(x, y + 60, 20, 5);
   }
 }
 
@@ -77,14 +100,19 @@ function update(timestamp) {
   if (timestamp - lastRevealTime > letterRevealInterval && currentIndex < titleText.length) {
     currentIndex++;
     lastRevealTime = timestamp;
+
+    // Start music on first letter reveal
+    if (!musicStarted) {
+      bgMusic.play().catch(e => {
+        // Autoplay might be blocked, user interaction needed
+        console.log('Music play prevented:', e);
+      });
+      musicStarted = true;
+    }
   }
 
   // Toggle blinking colon cursor every 500ms
-  if (Math.floor(timestamp / 500) % 2 === 0) {
-    showCursor = true;
-  } else {
-    showCursor = false;
-  }
+  showCursor = Math.floor(timestamp / 500) % 2 === 0;
 
   drawTitle();
 
@@ -95,5 +123,12 @@ function update(timestamp) {
 
   requestAnimationFrame(update);
 }
+
+// Optional: resume audio on user interaction if autoplay blocked
+document.body.addEventListener('click', () => {
+  if (bgMusic.paused && musicStarted) {
+    bgMusic.play();
+  }
+});
 
 requestAnimationFrame(update);
