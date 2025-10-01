@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOT: Reality's Compiler - Game</title>
+    <link rel="stylesheet" href="assets/css/game.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD Overlay -->
+        <div id="hud">
+            <div id="health-bar">
+                <div class="bar-label">HP</div>
+                <div class="bar-container">
+                    <div id="health-fill" class="bar-fill"></div>
+                </div>
+                <div id="health-text" class="bar-text">100/100</div>
+            </div>
+            
+            <div id="mana-bar">
+                <div class="bar-label">MP</div>
+                <div class="bar-container">
+                    <div id="mana-fill" class="bar-fill mana"></div>
+                </div>
+                <div id="mana-text" class="bar-text">100/100</div>
+            </div>
+            
+            <div id="bit-fragments">
+                <span class="currency-icon">◈</span>
+                <span id="bit-count">0</span>
+            </div>
+            
+            <div id="minimap"></div>
+        </div>
+        
+        <!-- Menus (hidden by default) -->
+        <div id="inventory-menu" class="menu hidden">
+            <h2>INVENTORY</h2>
+            <div id="inventory-grid"></div>
+            <div id="item-details"></div>
+        </div>
+        
+        <div id="pause-menu" class="menu hidden">
+            <h2>SYSTEM MENU</h2>
+            <button data-action="resume">Resume</button>
+            <button data-action="inventory">Inventory</button>
+            <button data-action="map">Map</button>
+            <button data-action="save">Save</button>
+            <button data-action="settings">Settings</button>
+            <button data-action="quit">Quit to Title</button>
+        </div>
+    </div>
+    
+    <!-- Core Engine -->
+    <script src="assets/js/core/audio-engine.js"></script>
+    <script src="assets/js/core/input-handler.js"></script>
+    <script src="assets/js/core/physics-engine.js"></script>
+    <script src="assets/js/core/render-engine.js"></script>
+    <script src="assets/js/core/game-engine.js"></script>
+    
+    <!-- Systems -->
+    <script src="assets/js/systems/combat-system.js"></script>
+    <script src="assets/js/systems/inventory-system.js"></script>
+    <script src="assets/js/systems/save-system.js"></script>
+    
+    <!-- Entities -->
+    <script src="assets/js/entities/player.js"></script>
+    <script src="assets/js/entities/enemy-base.js"></script>
+    
+    <!-- World -->
+    <script src="assets/js/world/realm-manager.js"></script>
+    <script src="assets/js/world/source-code-citadel.js"></script>
+    
+    <!-- Initialize -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
