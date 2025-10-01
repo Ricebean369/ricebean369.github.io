@@ -1,197 +1,80 @@
+// assets/js/title-screen.js
+
 const canvas = document.getElementById('titleCanvas');
 const ctx = canvas.getContext('2d');
 
-const title = "ROOT: REALITY'S COMPILER";
-const slogan = "Where your dreams become code";
-const letterInterval = 500; // ms per letter reveal
+const titleText = "ROOT: REALITY'S COMPILER";
+const sloganText = "Where your dreams become code";
+const promptText = "> PRESS START";
 
-let displayedTitle = "";
+const adminBlue = '#00FFFF';
+const black = '#000010';
+
 let currentIndex = 0;
 let lastTime = 0;
-let emblemAlpha = 0;
-let sloganAlpha = 0;
-let pressStartVisible = false;
+const letterInterval = 500; // ms between letters
 
-const pressStartDiv = document.getElementById('pressStart');
-pressStartDiv.style.opacity = 0;
-
-const centerX = canvas.width / 2;
-const centerY = canvas.height / 2;
-
-function drawText(text, x, y, glow = false, fontSize = 48) {
-  ctx.font = `${fontSize}px 'Press Start 2P', monospace`;
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#00ffff';
-  if (glow) {
-    ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = 12;
-  } else {
-    ctx.shadowBlur = 0;
-  }
-  ctx.fillText(text, x, y);
-  ctx.shadowBlur = 0;
-}
-
-function drawRootEmblem(alpha) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-
-  ctx.strokeStyle = '#00ffff';
-  ctx.lineWidth = 4;
-  ctx.shadowColor = '#00ffff';
-  ctx.shadowBlur = 20;
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-
-  const center = { x: centerX, y: centerY + 60 };
-  const scale = 1.5;
-
-  ctx.beginPath();
-
-  // Vertical stem
-  ctx.moveTo(center.x - 30 * scale, center.y - 50 * scale);
-  ctx.lineTo(center.x - 30 * scale, center.y + 50 * scale);
-
-  // Upper loop (rounded)
-  ctx.bezierCurveTo(
-    center.x - 30 * scale, center.y - 50 * scale,
-    center.x + 10 * scale, center.y - 50 * scale,
-    center.x + 10 * scale, center.y - 10 * scale
-  );
-  ctx.bezierCurveTo(
-    center.x + 10 * scale, center.y - 10 * scale,
-    center.x + 10 * scale, center.y + 10 * scale,
-    center.x - 30 * scale, center.y + 10 * scale
-  );
-
-  // Diagonal leg
-  ctx.moveTo(center.x - 10 * scale, center.y + 10 * scale);
-  ctx.lineTo(center.x + 30 * scale, center.y + 50 * scale);
-
-  ctx.stroke();
-
-  // Glowing data fragments orbiting the emblem
-  const fragmentCount = 20;
-  for (let i = 0; i < fragmentCount; i++) {
-    const angle = (Date.now() / 1000 + i * (Math.PI * 2 / fragmentCount)) % (Math.PI * 2);
-    const radius = 50 * scale + 5 * Math.sin(Date.now() / 300 + i);
-    const x = center.x + radius * Math.cos(angle);
-    const y = center.y + radius * Math.sin(angle);
-
-    ctx.beginPath();
-    ctx.fillStyle = '#00ffff';
-    ctx.shadowBlur = 15;
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Central glowing core circle
-  ctx.beginPath();
-  ctx.fillStyle = '#00ffff';
-  ctx.shadowBlur = 30;
-  ctx.arc(center.x, center.y, 12, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.restore();
-}
+// For blinking colon cursor
+let showCursor = true;
+setInterval(() => {
+  showCursor = !showCursor;
+}, 500);
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  drawText(displayedTitle, centerX, centerY - 40, true, 48);
+  ctx.fillStyle = adminBlue;
+  ctx.font = '48px monospace';
+  ctx.textBaseline = 'top';
 
-  if (displayedTitle.length >= 4) {
-    const colonX = centerX - ctx.measureText(title).width / 2 + ctx.measureText("ROOT").width + 10;
-    if (Math.floor(Date.now() / 500) % 2 === 0) {
-      drawText(":", colonX, centerY - 40, true, 48);
+  // Draw title letters up to currentIndex
+  const visibleText = titleText.substring(0, currentIndex);
+  ctx.fillText(visibleText, 50, 100);
+
+  // Draw blinking colon cursor after "ROOT"
+  if (currentIndex >= 4) {
+    if (showCursor) {
+      // Colon position after "ROOT"
+      ctx.fillRect(50 + ctx.measureText("ROOT").width + 5, 110, 10, 10);
+      ctx.fillRect(50 + ctx.measureText("ROOT").width + 5, 130, 10, 10);
     }
   }
 
-  if (sloganAlpha > 0) {
-    ctx.globalAlpha = sloganAlpha;
-    drawText(slogan, centerX, centerY + 40, false, 20);
-    ctx.globalAlpha = 1;
-  }
+  // When full title is shown, show slogan and prompt
+  if (currentIndex >= titleText.length) {
+    ctx.font = '24px monospace';
+    ctx.fillText(sloganText, 50, 180);
 
-  if (emblemAlpha > 0) {
-    drawRootEmblem(emblemAlpha);
+    // Pulsing prompt
+    const alpha = 0.5 + 0.5 * Math.sin(Date.now() / 500);
+    ctx.fillStyle = `rgba(0, 255, 255, ${alpha.toFixed(2)})`;
+    ctx.fillText(promptText, 50, 220);
   }
 }
 
-function update(timestamp) {
-  if (!lastTime) lastTime = timestamp;
-  const delta = timestamp - lastTime;
+function update(time) {
+  if (!lastTime) lastTime = time;
+  const delta = time - lastTime;
 
-  if (currentIndex < title.length && delta > letterInterval) {
-    displayedTitle += title[currentIndex];
+  if (delta > letterInterval && currentIndex < titleText.length) {
     currentIndex++;
-    lastTime = timestamp;
-  } else if (currentIndex >= title.length) {
-    if (emblemAlpha < 1) emblemAlpha += 0.01;
-    if (emblemAlpha >= 1 && sloganAlpha < 1) sloganAlpha += 0.01;
-    if (sloganAlpha >= 1 && !pressStartVisible) {
-      pressStartDiv.style.opacity = 1;
-      pressStartVisible = true;
-    }
+    lastTime = time;
   }
 
   draw();
   requestAnimationFrame(update);
 }
 
-function startAnimation() {
-  document.removeEventListener('keydown', startAnimation);
-  document.removeEventListener('click', startAnimation);
-  playMusic();
-  requestAnimationFrame(update);
+// Start animation
+requestAnimationFrame(update);
+
+// Start game on any key or click
+function startGame() {
+  alert("Game Starting! (Replace this with actual game start code)");
+  // TODO: Replace alert with game start logic
+  window.removeEventListener('keydown', startGame);
+  window.removeEventListener('click', startGame);
 }
 
-document.addEventListener('keydown', startAnimation);
-document.addEventListener('click', startAnimation);
-
-pressStartDiv.addEventListener('click', () => {
-  alert("Start Game! Transition to main menu here.");
-  // TODO: Replace alert with actual game start logic
-});
-
-// --- Music ---
-
-let audioCtx;
-let oscillator;
-let gainNode;
-let isPlaying = false;
-
-function playMusic() {
-  if (isPlaying) return;
-  isPlaying = true;
-
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  gainNode = audioCtx.createGain();
-  gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-  gainNode.connect(audioCtx.destination);
-
-  oscillator = audioCtx.createOscillator();
-  oscillator.type = 'square';
-  oscillator.frequency.setValueAtTime(110, audioCtx.currentTime);
-  oscillator.connect(gainNode);
-  oscillator.start();
-
-  const melody = [
-    {freq: 110, duration: 500},
-    {freq: 146.83, duration: 500},
-    {freq: 164.81, duration: 500},
-    {freq: 196.00, duration: 500},
-    {freq: 220.00, duration: 1000},
-  ];
-
-  let noteIndex = 0;
-  function playNextNote() {
-    if (noteIndex >= melody.length) noteIndex = 0;
-    const note = melody[noteIndex];
-    oscillator.frequency.setValueAtTime(note.freq, audioCtx.currentTime);
-    noteIndex++;
-    setTimeout(playNextNote, note.duration);
-  }
-  playNextNote();
-}
+window.addEventListener('keydown', startGame);
+window.addEventListener('click', startGame);
