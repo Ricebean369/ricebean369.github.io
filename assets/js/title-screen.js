@@ -32,41 +32,65 @@ function drawText(text, x, y, glow = false, fontSize = 48) {
   ctx.shadowBlur = 0;
 }
 
-function drawEmblem(alpha) {
+function drawRootEmblem(alpha) {
   ctx.save();
   ctx.globalAlpha = alpha;
+
   ctx.strokeStyle = '#00ffff';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 4;
   ctx.shadowColor = '#00ffff';
   ctx.shadowBlur = 20;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
 
-  const size = 80;
-  const top = {x: centerX, y: centerY + 60 - size};
-  const left = {x: centerX - size, y: centerY + 60 + size};
-  const right = {x: centerX + size, y: centerY + 60 + size};
+  const center = { x: centerX, y: centerY + 60 };
+  const scale = 1.5;
 
   ctx.beginPath();
-  ctx.moveTo(top.x, top.y);
-  ctx.lineTo(left.x, left.y);
-  ctx.lineTo(right.x, right.y);
-  ctx.closePath();
+
+  // Vertical stem
+  ctx.moveTo(center.x - 30 * scale, center.y - 50 * scale);
+  ctx.lineTo(center.x - 30 * scale, center.y + 50 * scale);
+
+  // Upper loop (rounded)
+  ctx.bezierCurveTo(
+    center.x - 30 * scale, center.y - 50 * scale,
+    center.x + 10 * scale, center.y - 50 * scale,
+    center.x + 10 * scale, center.y - 10 * scale
+  );
+  ctx.bezierCurveTo(
+    center.x + 10 * scale, center.y - 10 * scale,
+    center.x + 10 * scale, center.y + 10 * scale,
+    center.x - 30 * scale, center.y + 10 * scale
+  );
+
+  // Diagonal leg
+  ctx.moveTo(center.x - 10 * scale, center.y + 10 * scale);
+  ctx.lineTo(center.x + 30 * scale, center.y + 50 * scale);
+
   ctx.stroke();
 
-  function drawCodeDots(p1, p2, count) {
-    for (let i = 0; i <= count; i++) {
-      const t = i / count;
-      const x = p1.x + (p2.x - p1.x) * t + (Math.sin(Date.now() / 200 + i) * 3);
-      const y = p1.y + (p2.y - p1.y) * t + (Math.cos(Date.now() / 200 + i) * 3);
-      ctx.beginPath();
-      ctx.fillStyle = '#00ffff';
-      ctx.shadowBlur = 10;
-      ctx.arc(x, y, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  // Glowing data fragments orbiting the emblem
+  const fragmentCount = 20;
+  for (let i = 0; i < fragmentCount; i++) {
+    const angle = (Date.now() / 1000 + i * (Math.PI * 2 / fragmentCount)) % (Math.PI * 2);
+    const radius = 50 * scale + 5 * Math.sin(Date.now() / 300 + i);
+    const x = center.x + radius * Math.cos(angle);
+    const y = center.y + radius * Math.sin(angle);
+
+    ctx.beginPath();
+    ctx.fillStyle = '#00ffff';
+    ctx.shadowBlur = 15;
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
   }
-  drawCodeDots(top, left, 10);
-  drawCodeDots(left, right, 10);
-  drawCodeDots(right, top, 10);
+
+  // Central glowing core circle
+  ctx.beginPath();
+  ctx.fillStyle = '#00ffff';
+  ctx.shadowBlur = 30;
+  ctx.arc(center.x, center.y, 12, 0, Math.PI * 2);
+  ctx.fill();
 
   ctx.restore();
 }
@@ -90,7 +114,7 @@ function draw() {
   }
 
   if (emblemAlpha > 0) {
-    drawEmblem(emblemAlpha);
+    drawRootEmblem(emblemAlpha);
   }
 }
 
