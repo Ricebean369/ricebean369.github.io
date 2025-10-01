@@ -1,7 +1,7 @@
 const canvas = document.getElementById('titleCanvas');
 const ctx = canvas.getContext('2d');
 
-const titleText = "ROOT  REALITY'S COMPILER";
+const titleText = "ROOT REALITY'S COMPILER";
 const sloganText = "Where your dreams become code";
 const promptText = "> PRESS START";
 
