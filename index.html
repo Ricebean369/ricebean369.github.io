@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ROOT: Reality's Compiler</title>
-  <link rel="stylesheet" href="assets/css/title.css" />
-  <style>
-    body {
-      background-color: #000010;
-      margin: 0;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: monospace, monospace;
-      color: #00ffff;
-    }
-    #titleCanvas {
-      background-color: #000010;
-      display: block;
-      border: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROOT: Reality's Compiler</title>
+    <link rel="stylesheet" href="assets/css/title-screen.css">
 </head>
 <body>
-  <canvas id="titleCanvas" width="800" height="450"></canvas>
+    <div id="title-screen">
+        <canvas id="title-canvas"></canvas>
+        <div id="title-content">
+            <div id="title-logo">
+                <div id="subtitle" class="hidden">THE LEGEND OF</div>
+                <div id="main-title" class="hidden">ROOT</div>
+                <div id="tagline" class="hidden">REALITY'S COMPILER</div>
+                <svg id="source-emblem" class="hidden" viewBox="0 0 200 200" width="200" height="200">
+                    <polygon points="100,20 180,180 20,180" stroke="#00ffff" stroke-width="3" fill="none" opacity="0"/>
+                    <circle cx="100" cy="130" r="30" stroke="#00ffff" stroke-width="2" fill="none" opacity="0"/>
+                    <line x1="100" y1="20" x2="100" y2="100" stroke="#00ffff" stroke-width="2" opacity="0"/>
+                </svg>
+            </div>
+            <div id="press-start" class="hidden pulse">PRESS START BUTTON</div>
+        </div>
+    </div>
 
-  <!-- Audio element for music -->
-  <audio id="bgMusic" src="assets/audio/synthwave-theme.mp3" preload="auto"></audio>
-
-  <script src="assets/js/title-screen.js"></script>
+    <script src="assets/js/core/audio-engine.js"></script>
+    <script src="assets/js/screens/title-screen.js"></script>
 </body>
 </html>
