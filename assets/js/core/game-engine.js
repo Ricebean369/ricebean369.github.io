@@ -8,6 +8,7 @@ class GameEngine {
         this.player = null;
         this.currentRealm = null;
         this.entities = [];
+        this.droppedItems = [];
         
         this.paused = false;
         this.gameState = 'playing'; // playing, paused, inventory, menu
@@ -76,7 +77,13 @@ class GameEngine {
             this.physics.clear();
             this.entities = [];
         }
+         // Update dropped items
+        this.droppedItems.forEach(item => {
+            item.update(this.deltaTime, this.player);
+        });
         
+        // Remove picked up items
+        this.droppedItems = this.droppedItems.filter(item => !item.markedForDeletion);
         this.currentRealm = realm;
         
         // Re-add player
@@ -113,6 +120,11 @@ class GameEngine {
             requestAnimationFrame((time) => this.update(time));
             return;
         }
+        
+        // Draw dropped items
+        this.droppedItems.forEach(item => {
+            item.render(this.renderer);
+        });
         
         // Update player
         if (this.player) {
