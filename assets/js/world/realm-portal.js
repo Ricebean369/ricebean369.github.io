@@ -10,6 +10,7 @@ class RealmPortal {
         this.activationRadius = 50;
         this.glowPhase = 0;
         this.particles = [];
+        this.showPrompt = false;
     }
     
     update(deltaTime, player) {
