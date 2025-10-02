@@ -191,3 +191,126 @@ body {
     font-size: 12px;
     text-shadow: 1px 1px 0 #000;
 }
+
+/* Level Up Notification */
+#level-up-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    pointer-events: none;
+    animation: levelUpAppear 0.5s ease-out;
+}
+
+@keyframes levelUpAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.level-up-content {
+    background: linear-gradient(135deg, rgba(10, 10, 26, 0.95), rgba(26, 10, 46, 0.95));
+    border: 4px solid #ffaa00;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(255, 170, 0, 0.8);
+}
+
+.level-up-content h1 {
+    color: #ffaa00;
+    font-size: 48px;
+    margin: 0 0 20px 0;
+    text-shadow: 0 0 20px #ffaa00;
+    animation: glow 1s ease-in-out infinite;
+}
+
+.level-number {
+    font-size: 72px;
+    color: #00ffff;
+    font-weight: bold;
+    text-shadow: 0 0 30px #00ffff;
+    margin: 20px 0;
+}
+
+.stat-increases {
+    color: #00ff00;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.stat-increases div {
+    margin: 8px 0;
+    text-shadow: 2px 2px 0 #000;
+}
+
+#level-up-notification.fade-out {
+    animation: levelUpFadeOut 0.5s ease-out forwards;
+}
+
+@keyframes levelUpFadeOut {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.8);
+    }
+}
+
+/* Experience Bar */
+#exp-bar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+}
+
+.exp-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.exp-bar-bg {
+    flex: 1;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffaa00;
+    position: relative;
+}
+
+.exp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6600, #ffaa00);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px #ffaa00;
+}
+
+.exp-text {
+    color: #ffaa00;
+    font-size: 14px;
+    text-shadow: 2px 2px 0 #000;
+    white-space: nowrap;
+}
+
+/* Skill Point Notification */
+.skill-point-available {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background: rgba(255, 170, 0, 0.2);
+    border: 2px solid #ffaa00;
+    padding: 10px 20px;
+    color: #ffaa00;
+    font-size: 14px;
+    animation: pulse 1s ease-in-out infinite;
+    cursor: pointer;
+}
+
+.skill-point-available:hover {
+    background: rgba(255, 170, 0, 0.4);
+}
