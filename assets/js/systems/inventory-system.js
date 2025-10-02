@@ -42,7 +42,7 @@ class InventorySystem {
         
         return true;
     }
-    
+
     useItem(slotIndex) {
         const item = this.items[slotIndex];
         if (!item) return;
