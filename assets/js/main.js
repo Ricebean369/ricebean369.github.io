@@ -1,15 +1,24 @@
-// Initialize the game when DOM is ready
+// Global systems
+window.particleSystem = null;
+window.spriteEngine = null;
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('ROOT: Reality\'s Compiler - Loading...');
     
     // Initialize audio
     await audioEngine.initialize();
     
+    // Initialize sprite engine
+    window.spriteEngine = new SpriteEngine();
+    
+    // Initialize particle system
+    window.particleSystem = new ParticleSystem();
+    
     // Create game engine
     const game = new GameEngine();
     
     // Create player
-    const player = new Player(1000, 1000); // Start position
+    const player = new Player(1000, 1000);
     game.setPlayer(player);
     
     // Create inventory system
@@ -46,8 +55,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveSystem.save(game);
     }, 60000);
     
+    // Enhance game update loop to include particles
+    const originalUpdate = game.update.bind(game);
+    game.update = function(currentTime) {
+        originalUpdate(currentTime);
+        
+        if (!game.paused && window.particleSystem) {
+            window.particleSystem.update(game.deltaTime);
+        }
+    };
+    
+    // Enhance render to include particles
+    const originalRender = game.render.bind(game);
+    game.render = function() {
+        originalRender();
+        
+        if (window.particleSystem) {
+            window.particleSystem.render(game.renderer);
+        }
+    };
+    
     // Start game loop
     game.start();
     
-    console.log('Game started! Use WASD/Arrow keys to move, Space/J to attack');
+    console.log('═══════════════════════════════════');
+    console.log('  ROOT: REALITY\'S COMPILER v0.1');
+    console.log('═══════════════════════════════════');
+    console.log('Controls:');
+    console.log('  WASD / Arrow Keys - Move');
+    console.log('  Space / J - Attack');
+    console.log('  Shift - Dodge');
+    console.log('  ESC - Pause Menu');
+    console.log('  I - Inventory');
+    console.log('═══════════════════════════════════');
 });
