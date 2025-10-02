@@ -12,6 +12,11 @@ class BinaryBadlands {
         this.npcs = [];
         this.items = [];
         
+        // Portal back to Source Code Citadel
+        this.portals = [
+            new RealmPortal(200, 200, 'source-code-citadel', 'To Source Code Citadel')
+        ];
+        
         // Environmental effects
         this.sandParticles = [];
         this.initSandStorm();
@@ -89,8 +94,13 @@ class BinaryBadlands {
         }
     }
     
-    update(deltaTime) {
+    update(deltaTime, player) {
         this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
+        
+        // Update portals
+        if (this.portals) {
+            this.portals.forEach(portal => portal.update(deltaTime, player));
+        }
         
         // Update sand particles
         this.sandParticles.forEach(p => {
@@ -127,6 +137,11 @@ class BinaryBadlands {
         
         this.drawBinaryNumbers(renderer);
         this.drawRealmLabel(renderer);
+        
+        // Draw portals
+        if (this.portals) {
+            this.portals.forEach(portal => portal.render(renderer));
+        }
     }
     
     drawGrid(renderer) {
