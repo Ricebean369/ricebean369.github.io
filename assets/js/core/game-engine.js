@@ -16,6 +16,9 @@ class GameEngine {
         this.lastTime = performance.now();
         this.deltaTime = 0;
         
+        this.progressionSystem = null;
+        this.skillTree = null;
+        
         this.setupMenuListeners();
     }
     
@@ -76,14 +79,9 @@ class GameEngine {
         if (this.currentRealm) {
             this.physics.clear();
             this.entities = [];
+            this.droppedItems = [];
         }
-         // Update dropped items
-        this.droppedItems.forEach(item => {
-            item.update(this.deltaTime, this.player);
-        });
         
-        // Remove picked up items
-        this.droppedItems = this.droppedItems.filter(item => !item.markedForDeletion);
         this.currentRealm = realm;
         
         // Re-add player
@@ -101,6 +99,13 @@ class GameEngine {
         realm.colliders.forEach(collider => {
             this.physics.addCollider(collider);
         });
+        
+        // Add portals as entities for rendering
+        if (realm.portals) {
+            realm.portals.forEach(portal => {
+                this.entities.push(portal);
+            });
+        }
     }
     
     update(currentTime) {
@@ -121,11 +126,6 @@ class GameEngine {
             return;
         }
         
-        // Draw dropped items
-        this.droppedItems.forEach(item => {
-            item.render(this.renderer);
-        });
-        
         // Update player
         if (this.player) {
             this.player.update(this.deltaTime, this.input);
@@ -138,12 +138,20 @@ class GameEngine {
             }
         });
         
+        // Update dropped items
+        this.droppedItems.forEach(item => {
+            item.update(this.deltaTime, this.player);
+        });
+        
+        // Remove picked up items
+        this.droppedItems = this.droppedItems.filter(item => !item.markedForDeletion);
+        
         // Update physics
         this.physics.update(this.deltaTime);
         
         // Update current realm
         if (this.currentRealm) {
-            this.currentRealm.update(this.deltaTime);
+            this.currentRealm.update(this.deltaTime, this.player);
         }
         
         // Render
@@ -182,6 +190,11 @@ class GameEngine {
             }
         });
         
+        // Draw dropped items
+        this.droppedItems.forEach(item => {
+            item.render(this.renderer);
+        });
+        
         // Draw health bars
         this.entities.forEach(entity => {
             if (entity !== this.player && entity.health) {
@@ -207,6 +220,15 @@ class GameEngine {
         
         // Bit fragments
         document.getElementById('bit-count').textContent = this.player.bitFragments;
+        
+        // Experience bar
+        if (this.progressionSystem) {
+            const expPercent = this.progressionSystem.getExpProgress() * 100;
+            document.getElementById('exp-fill').style.width = expPercent + '%';
+            document.getElementById('player-level').textContent = this.player.level;
+            document.getElementById('exp-current').textContent = Math.floor(this.player.experience);
+            document.getElementById('exp-required').textContent = this.progressionSystem.getCurrentLevelExp();
+        }
     }
     
     start() {
