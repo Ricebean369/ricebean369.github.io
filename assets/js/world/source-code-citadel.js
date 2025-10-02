@@ -19,6 +19,11 @@ class SourceCodeCitadel {
         
         // Items
         this.items = [];
+        
+        // Portal to next realm
+        this.portals = [
+            new RealmPortal(1800, 1800, 'binary-badlands', 'To Binary Badlands')
+        ];
     }
     
     createColliders() {
@@ -66,12 +71,12 @@ class SourceCodeCitadel {
         return enemies;
     }
     
-    update(deltaTime) {
+    update(deltaTime, player) {
         // Remove dead enemies
         this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
         
-        // Update realm-specific logic
-        // (particles, animations, environmental effects)
+        // Update portals
+        this.portals.forEach(portal => portal.update(deltaTime, player));
     }
     
     render(renderer) {
@@ -89,6 +94,9 @@ class SourceCodeCitadel {
         
         // Draw realm-specific details
         this.drawCathedralDetails(renderer);
+        
+        // Draw portals
+        this.portals.forEach(portal => portal.render(renderer));
     }
     
     drawGrid(renderer) {
@@ -127,7 +135,7 @@ class SourceCodeCitadel {
             const y = 200 + Math.sin(time + i) * 50;
             
             renderer.drawText(
-                ['{}', '[]', '()', '<>', '//'].at(i % 5),
+                ['{}', '[]', '()', '<>', '//'][i % 5],
                 x,
                 y,
                 'rgba(0, 255, 255, 0.3)',
