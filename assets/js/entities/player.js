@@ -21,7 +21,7 @@ class Player {
         // Combat
         this.damage = 15;
         this.attackCooldown = 0;
-        this.attackSpeed = 0.5; // seconds between attacks
+        this.attackSpeed = 0.5;
         this.invulnerable = false;
         this.invulnerableTime = 0;
         
@@ -34,12 +34,21 @@ class Player {
         this.shield = null;
         
         // State
-        this.facing = 'down'; // up, down, left, right
+        this.facing = 'down';
         this.attacking = false;
         this.dodging = false;
         
+        // Animation
+        this.animFrame = 0;
+        this.animTime = 0;
+        this.animSpeed = 0.15;
+        
         // Visual
         this.color = '#00ffff';
+        this.glowIntensity = 0;
+        
+        // Sprite
+        this.sprite = null;
     }
     
     update(deltaTime, input) {
@@ -54,6 +63,16 @@ class Player {
                 this.invulnerable = false;
             }
         }
+        
+        // Animation
+        this.animTime += deltaTime;
+        if (this.animTime >= this.animSpeed) {
+            this.animTime = 0;
+            this.animFrame = (this.animFrame + 1) % 4;
+        }
+        
+        // Glow effect
+        this.glowIntensity = Math.sin(Date.now() / 200) * 0.3 + 0.7;
         
         // Movement
         const movement = input.getMovementVector();
@@ -107,16 +126,29 @@ class Player {
                 break;
         }
         
-        // Store hitbox for collision detection
         this.attackHitbox = hitbox;
+        
+        // Attack particles
+        if (window.particleSystem) {
+            window.particleSystem.emit(
+                hitbox.x + hitbox.width / 2,
+                hitbox.y + hitbox.height / 2,
+                {
+                    count: 15,
+                    color: '#ffff00',
+                    size: 3,
+                    speed: 150,
+                    lifetime: 0.3,
+                    spread: Math.PI / 3
+                }
+            );
+        }
         
         // Clear hitbox after short time
         setTimeout(() => {
             this.attacking = false;
             this.attackHitbox = null;
         }, 100);
-        
-        console.log('Player attacks!');
     }
     
     dodge() {
@@ -124,10 +156,24 @@ class Player {
         this.invulnerable = true;
         this.invulnerableTime = 0.3;
         
-        // Boost speed temporarily
         const dodgeBoost = 2;
         const originalSpeed = this.speed;
         this.speed *= dodgeBoost;
+        
+        // Dodge particles
+        if (window.particleSystem) {
+            window.particleSystem.emit(
+                this.x + this.width / 2,
+                this.y + this.height / 2,
+                {
+                    count: 20,
+                    color: '#00ffff',
+                    size: 2,
+                    speed: 80,
+                    lifetime: 0.5
+                }
+            );
+        }
         
         setTimeout(() => {
             this.dodging = false;
@@ -142,18 +188,47 @@ class Player {
         this.invulnerable = true;
         this.invulnerableTime = 1.0;
         
+        // Damage particles
+        if (window.particleSystem) {
+            window.particleSystem.emit(
+                this.x + this.width / 2,
+                this.y + this.height / 2,
+                {
+                    count: 10,
+                    color: '#ff0000',
+                    size: 4,
+                    speed: 100,
+                    lifetime: 0.5
+                }
+            );
+        }
+        
         if (this.health <= 0) {
             this.health = 0;
             this.die();
         }
-        
-        console.log(`Player takes ${amount} damage! Health: ${this.health}/${this.maxHealth}`);
     }
     
     heal(amount) {
         this.health += amount;
         if (this.health > this.maxHealth) {
             this.health = this.maxHealth;
+        }
+        
+        // Heal particles
+        if (window.particleSystem) {
+            window.particleSystem.emit(
+                this.x + this.width / 2,
+                this.y + this.height / 2,
+                {
+                    count: 15,
+                    color: '#00ff00',
+                    size: 3,
+                    speed: 60,
+                    lifetime: 1.0,
+                    gravity: -50
+                }
+            );
         }
     }
     
@@ -167,15 +242,23 @@ class Player {
     }
     
     render(renderer) {
-        // Draw player as rectangle for now
-        let color = this.color;
+        // Offset for walking animation
+        const bobOffset = Math.sin(this.animFrame * Math.PI / 2) * 2;
         
-        // Flash when invulnerable
-        if (this.invulnerable && Math.floor(Date.now() / 100) % 2 === 0) {
-            color = '#ffffff';
+        // Draw glow
+        if (!this.invulnerable || Math.floor(Date.now() / 100) % 2 === 0) {
+            renderer.ctx.save();
+            renderer.ctx.shadowBlur = 15 * this.glowIntensity;
+            renderer.ctx.shadowColor = this.color;
+            renderer.drawRect(
+                this.x, 
+                this.y + bobOffset, 
+                this.width, 
+                this.height, 
+                this.color
+            );
+            renderer.ctx.restore();
         }
-        
-        renderer.drawRect(this.x, this.y, this.width, this.height, color);
         
         // Draw direction indicator
         const indicatorSize = 8;
@@ -191,15 +274,34 @@ class Player {
         
         renderer.drawRect(indX, indY, indicatorSize, indicatorSize, '#ffff00');
         
-        // Draw attack hitbox when attacking
+        // Draw attack slash effect
         if (this.attacking && this.attackHitbox) {
+            renderer.ctx.save();
+            renderer.ctx.globalAlpha = 0.6;
+            renderer.ctx.shadowBlur = 20;
+            renderer.ctx.shadowColor = '#ffff00';
             renderer.drawRect(
                 this.attackHitbox.x, 
                 this.attackHitbox.y, 
                 this.attackHitbox.width, 
                 this.attackHitbox.height, 
-                'rgba(255, 255, 0, 0.5)'
+                '#ffff00'
             );
+            renderer.ctx.restore();
+        }
+        
+        // Draw dodge trail
+        if (this.dodging) {
+            renderer.ctx.save();
+            renderer.ctx.globalAlpha = 0.3;
+            renderer.drawRect(
+                this.x - this.velocity.x * 0.05,
+                this.y - this.velocity.y * 0.05,
+                this.width,
+                this.height,
+                this.color
+            );
+            renderer.ctx.restore();
         }
     }
 }
