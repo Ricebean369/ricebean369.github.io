@@ -58,6 +58,33 @@ class Enemy {
                 aggroRange: 180,
                 attackRange: 35,
                 expValue: 15
+            },
+            'sand-biter': {
+                health: 20,
+                damage: 12,
+                speed: 140,
+                color: '#D2B48C',
+                aggroRange: 200,
+                attackRange: 35,
+                expValue: 12
+            },
+            'logic-scorpion': {
+                health: 40,
+                damage: 15,
+                speed: 70,
+                color: '#8B4513',
+                aggroRange: 220,
+                attackRange: 45,
+                expValue: 20
+            },
+            'data-whirlwind': {
+                health: 35,
+                damage: 18,
+                speed: 90,
+                color: '#FFD700',
+                aggroRange: 250,
+                attackRange: 60,
+                expValue: 25
             }
         };
         
